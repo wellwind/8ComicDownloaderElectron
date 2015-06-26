@@ -5,28 +5,117 @@
     <title>8Comic下載器(Electron)</title>
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" media="screen" charset="utf-8">
     <script type="text/javascript">
-      window.$ = window.jQuery = require(__dirname + '/libs/jquery/jquery-1.11.3.min.js');
+      window.$ = window.jQuery = require('jquery');
+      require('bootstrap');
     </script>
-    <script src="libs/jquery/jquery-1.11.3.min.js" charset="utf-8"></script>
   </head>
   <body>
+    <div class="container-fluid">
     <header class="page-header">
       <h1>8Comic下載器</h1>
     </header>
     <section>
-      <div class="container">
-        <div class="progress">
-          <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-      </div>
-    </div>
+
+        <div class="row">
+          <div class="progress" class="col-xs-10">
+            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="row">
+          <h3 class="col-xs-12">漫畫目錄</h3>
+          <div class="col-xs-12 col-md-8"><span id="saveComicDialog">[尚未設定]</span></div>
+          <div class="col-xs-12 col-md-2"><input type="button" id="setComicFolder" value="設定漫畫目錄" class="btn btn-default btn-block"/></div>
+          <div class="col-xs-12 col-md-2"><input type="button" id="openComicFolder" value="開啟漫畫目錄" class="btn btn-primary btn-block" /></div>
+        </div>
+        <div class="row">
+          <h3 class="col-xs-12">漫畫清單</h3>
+          <div class="row">
+            <div class="col-xs-12 col-md-8">
+              <select id="comicList" class="form-control">
+                <option value="">[加入漫畫網址...]</option>
+              </select>
+            </div>
+            <div class="col-xs-12 col-md-4"><input type="button" id="getPictureList" value="取得漫畫清單" class="btn btn-default btn-block"/></div>
+          </div>
+          <div class="row" style="margin-top: 5px;">
+            <div class="col-xs-12 col-md-offset-8 col-md-4">
+              <div class="row">
+                  <div class="row form-horizontal">
+                    <div class="form-group">
+                      <label class="col-xs-3 control-label" for="lastNVolume">抓最後</label>
+                      <div class="col-xs-3"><input class="form-control" type="number" id="lastNVolume" value="10" /></div>
+                      <label class="col-xs-1 control-label" for="lastNVolume">集</label>
+                      <div class="checkbox col-xs-3">
+                        <label>
+                          <input type="checkbox" id="getAllPictures">全抓
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <h3 class="col-xs-12">下載清單</h3>
+          <div class="col-xs-12">
+            <div class="col-xs-12 col-md-offset-3 col-md-3">
+              <input type="button" class="btn btn-danger btn-block" value="清除下載清單" />
+            </div>
+            <div class="col-xs-12 col-md-3">
+              <input type="button"  class="col-xs-12 col-md-2 btn btn-success btn-block" value="開始下載" />
+            </div>
+            <div class="col-xs-12 col-md-3">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="skipIfExist" checked>檔案已存在就不下載
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12" style="height: 500px; overflow-y: scroll; margin-top:5px;">
+          <table class="table table-responsive table-hover" id="pictuerList">
+            <thead>
+            <tr>
+              <th>狀態</th>
+              <th>存放路徑</th>
+              <th>漫畫網址</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+          </table>
+        </div>
+        </div>
+
     </section>
     <footer>
-      Copyright (c) 2015 <a href="http://wellwind.idv.tw" target="_blank">Wellwind's Studio</a> All Rights Reserved.
+      <div class="center-block" align="center">Copyright (c) 2015 <a href="http://wellwind.idv.tw" target="_blank">Wellwind's Studio</a> All Rights Reserved.</div>
     </footer>
+    </div>
   </body>
 </html>
 <script>
 $(document).ready(function(){
-
-})
+  var initComicFolder = function() {
+      $('#saveComicDialog').text('[尚未設定]');
+  }
+  var initPage = function() {
+    initComicFolder();
+  }
+  initPage();
+  var remote = require('remote');
+  var dialog = remote.require('dialog');
+  $('#setComicFolder').click(function(){
+    dialog.showOpenDialog(
+      {
+        properties: ['openDirectory']
+      },
+      function (directoryPath) {
+        $('#saveComicDialog').text(directoryPath);
+      }
+    );
+  });
+});
 </script>

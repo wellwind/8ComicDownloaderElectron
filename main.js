@@ -4,9 +4,6 @@ var BrowserWindow = require('browser-window');  // Module to create native brows
 // Report crashes to our server.
 require('crash-reporter').start();
 
-// jquery
-require('jquery');
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the 44444444444javascript object is GCed.
 var mainWindow = null;
@@ -22,7 +19,12 @@ app.on('window-all-closed', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    'min-width': 1024,
+    'min-height': 768
+  });
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
@@ -30,6 +32,8 @@ app.on('ready', function() {
   // Open the devtools.
   mainWindow.openDevTools();
 
+  //
+  mainWindow.maximize();
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
