@@ -213,6 +213,7 @@ function updateProgress() {
 }
 
 $(document).ready(function() {
+  remote.getCurrentWindow().closeDevTools();
   initPage();
   $("#setComicFolder").click(function() {
     dialog.showOpenDialog({

@@ -1,13 +1,15 @@
 {
   "name": "8comic-downloader-electron",
   "version": "0.1.0",
+  "description": "8comic.com downloader",
   "main": "main.js",
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  },
   "dependencies": {
-    "bluebird": "^2.9.30",
     "iconv-lite": "^0.4.10",
     "jquery": "^2.1.4",
     "mkdirp": "^0.5.1",
-    "puid": "^1.0.5",
     "request": "^2.58.0"
   }
 }
