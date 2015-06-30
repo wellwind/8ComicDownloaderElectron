@@ -8,6 +8,9 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var sys = require('sys')
+var exec = require('child_process').exec;
+
 var appSettings;
 var configFilePath = './settings.conf';
 
@@ -27,7 +30,6 @@ function initPage() {
     }
 
     appSettings = JSON.parse(data);
-    $("#setComicFolder")
     $("#saveComicDialog").text(appSettings.comicFolder);
     appSettingsToComicList();
   });
@@ -120,9 +122,9 @@ function appendComicPictureUrlToTable(comicName, comicVol, urlIndex) {
   var rowHtml = "";
   var urlSplit = comicVol.Urls[urlIndex].split("/");
   rowHtml += "<tr>";
-  rowHtml += "<td>未下載</td>";
-  rowHtml += "<td>" + comicName + "/" + comicVol.Vol + "/" + urlSplit[urlSplit.length - 1] + "</td>";
-  rowHtml += "<td>" + comicVol.Urls[urlIndex] + "</td>";
+  rowHtml += "<td width=\"15%\">未下載</td>";
+  rowHtml += "<td width=\"40%\">" + comicName + "/" + comicVol.Vol + "/" + urlSplit[urlSplit.length - 1] + "</td>";
+  rowHtml += "<td width=\"45%\">" + comicVol.Urls[urlIndex] + "</td>";
   rowHtml += "</tr>";
   $('#comicUrlsList').append(rowHtml);
 }
@@ -196,7 +198,7 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
     if ((fileExist && !$('#skipIfExist').is(':checked')) || !fileExist) {
       // change UI
       $(statusColumn).scrollintoview();
-      $(statusColumn).text('下載中');
+      $(statusColumn).html('<span class="text-info"><i class="fa fa-spinner fa-spin"></i> 下載中</span>');
       // make dir
       mkdirp(path.dirname(fullPath));
       // download
@@ -205,14 +207,14 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
         response.pipe(file);
         file.on('finish', function() {
           moveFile('./' + path.basename(fullPath), fullPath, function() {
-            $(statusColumn).html('<span class="text-success">完成</span>');
+            $(statusColumn).html('<span class="text-success"><i class="fa fa-check"></i> 完成</span>');
             updateProgress();
             callback();
           });
         });
       });
     } else {
-      $(statusColumn).text('已存在');
+      $(statusColumn).html('<span class="text-danger"><i class="fa fa-copy"></i> 已存在</span>');
       updateProgress();
       callback();
     }
@@ -264,6 +266,10 @@ $(document).ready(function() {
     );
   });
 
+  $('#openComicFolder').click(function() {
+    exec('explorer ' + $('#saveComicDialog').text());
+  });
+
   $('#addComicUrl').blur(function() {
     if ($(this).val() == '') return;
 
@@ -286,7 +292,7 @@ $(document).ready(function() {
     getComicPicturesFromList(comicUrl, $('#getAllPictures').is(':checked'), $('#lastVols').val());
   });
 
-  $('#removieFromComicList').click(function() {
+  $('#removeFromComicList').click(function() {
     var data = $('#comicList').find(":selected").text();
     var comicUrl = $('#comicList').val();
     if (confirm("確定要移除[" + data + "]?")) {

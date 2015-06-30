@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <title>8Comic下載器(Electron)</title>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="index.css" media="screen" charset="utf-8">
   <script type="text/javascript">
     window.$ = window.jQuery = require("jquery");
     require("bootstrap");
@@ -14,7 +16,7 @@
 <body>
   <div class="container-fluid">
     <header class="page-header">
-      <h1>8Comic下載器</h1>
+      <h1 class="text-danger"><i class="fa fw fa-cloud-download"></i> 8Comic下載器</h1>
     </header>
     <section>
 
@@ -26,34 +28,44 @@
         </div>
       </div>
       <div class="row">
-        <h3 class="col-xs-12">漫畫目錄</h3>
+        <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 漫畫目錄</h3>
         <div class="col-xs-12 col-md-8">
           <span id="saveComicDialog">[尚未設定]</span>
         </div>
         <div class="col-xs-12 col-md-2">
-          <input type="button" id="setComicFolder" value="設定漫畫目錄" class="btn btn-info btn-block" />
+          <a href="javascript: void(0);" class="btn btn-primary btn-block" id="setComicFolder">
+            <i class="fa fa-fw fa-gear"></i> 設定漫畫目錄
+          </a>
         </div>
         <div class="col-xs-12 col-md-2">
-          <input type="button" id="openComicFolder" value="開啟漫畫目錄" class="btn btn-primary btn-block" />
+          <a href="javascript: void(0);" class="btn btn-primary btn-block" id="openComicFolder">
+            <i class="fa fa-fw fa-folder-open-o"></i> 開啟漫畫目錄
+          </a>
         </div>
       </div>
       <div class="row">
-        <h3 class="col-xs-12">漫畫清單</h3>
+        <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 漫畫清單</h3>
         <div class="col-xs-12 col-md-8">
           <select id="comicList" class="form-control">
           </select>
         </div>
         <div class="col-xs-2 col-md-1">
-          <input type="button" id="removieFromComicList" value="移除" class="btn btn-danger btn-block" />
+          <a href="javascript: void(0);" class="btn btn-danger btn-block" id="removeFromComicList">
+            <i class="fa fa-fw fa-trash"></i> 移除
+          </a>
         </div>
         <div class="col-xs-10 col-md-3">
-          <input type="button" id="getPictureList" value="取得漫畫清單" class="btn btn-info btn-block" />
+          <a href="javascript: void(0);" class="btn btn-info btn-block" id="getPictureList">
+            <i class="fa fa-fw fa-file-photo-o"></i> 取得漫畫清單
+          </a>
         </div>
         <div class="col-xs-12 col-md-5" style="margin-top: 5px;">
           <input type="text" id="addComicUrl" value="" class="form-control" placeholder="請輸入漫畫網址..." />
         </div>
         <div class="col-xs-12 col-md-3" style="margin-top: 5px;">
-          <input type="button" id="addComicUrlButton" value="加入漫畫網址" class=" btn btn-info btn-block " />
+          <a href="javascript: void(0);" class="btn btn-info btn-block" id="addComicUrlButton">
+            <i class="fa fa-fw fa-plus"></i> 加入漫畫網址
+          </a>
         </div>
         <div class="col-xs-12 col-md-4" style="margin-top: 5px;">
           <div class="row form-horizontal pull-left">
@@ -72,13 +84,17 @@
         </div>
       </div>
       <div class="row">
-        <h3 class="col-xs-12">下載清單</h3>
+        <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 下載清單</h3>
         <div class="col-xs-12">
           <div class="col-xs-12 col-md-offset-5 col-md-2">
-            <input type="button" id="clearPictureUrls" class="btn btn-danger btn-block" value="清除下載清單" />
+            <a href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls">
+              <i class="fa fa-fw fa-remove"></i> 清除下載清單
+            </a>
           </div>
           <div class="col-xs-12 col-md-2">
-            <input type="button" id="startDownload" class="col-xs-12 col-md-2 btn btn-success btn-block" value="開始下載" />
+            <a href="javascript: void(0);" class="btn btn-success btn-block" id="startDownload">
+              <i class="fa fa-fw fa-download"></i> 開始下載
+            </a>
           </div>
           <div class="col-xs-12 col-md-3">
             <div class="checkbox">
@@ -88,23 +104,23 @@
             </div>
           </div>
         </div>
-        <div class="col-xs-12" id="pictureListContainer" style="height: 500px; margin-top: 5px; overflow-y: scroll;">
-          <table class="table table-responsive table-hover" id="pictuerList">
+        <div class="col-xs-12" id="pictureListContainer">
+          <table class="table table-responsive table-striped table-hover header-fixed" id="pictuerList">
             <thead>
-              <tr>
-                <th>狀態</th>
-                <th>存放路徑</th>
-                <th>漫畫網址</th>
+              <tr class="info">
+                <th width="15%">狀態</th>
+                <th width="40%">存放路徑</th>
+                <th width="45%">漫畫網址</th>
               </tr>
             </thead>
-            <tbody id="comicUrlsList"></tbody>
+            <tbody id="comicUrlsList" style="height: 500px;"></tbody>
           </table>
         </div>
       </div>
 
     </section>
     <footer>
-      <div align="center">Copyright (c) 2015 <a href="http://wellwind.idv.tw" target="_blank">Wellwind's Studio</a> All Rights Reserved.
+      <div align="center">Copyright &copy; 2015 <a href="http://wellwind.idv.tw" target="_blank">Wellwind's Studio</a> All Rights Reserved.
       </div>
     </footer>
   </div>
