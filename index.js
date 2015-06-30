@@ -145,11 +145,15 @@ function getHtmlFromUrl(targetUrl, callback) {
 function startDownload() {
   resetProgress($('#comicUrlsList').find('tr').length);
   var downloadRows = getDownloadRows();
-  async.eachLimit(downloadRows, 5, function(currentRow, nextRow) {
-    if ($(currentRow.statusColumn).text() == '完成') return;
-    // check file exist and download
-    downloadComicPictureFile(currentRow.statusColumn, currentRow.path, currentRow.url, nextRow);
-  }, function() {
+  var parallelFunctions = [];
+  $(downloadRows).each(function(index, row) {
+    parallelFunctions.push(function(cb) {
+      downloadComicPictureFile(row.statusColumn, row.path, row.url, cb);
+    });
+  });
+  async.parallelLimit(parallelFunctions, 5, function(err, result) {
+    console.log(err);
+    console.log(result);
     console.log('finished');
   });
 }
@@ -190,11 +194,12 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
       fileExist = true;
     }
     if ((fileExist && !$('#skipIfExist').is(':checked')) || !fileExist) {
-      // download
+      // change UI
       $(statusColumn).scrollintoview();
       $(statusColumn).text('下載中');
-
+      // make dir
       mkdirp(path.dirname(fullPath));
+      // download
       var file = fs.createWriteStream(path.basename(fullPath));
       var request = http.get(url, function(response) {
         response.pipe(file);
