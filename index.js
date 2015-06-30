@@ -8,7 +8,6 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
-
 var appSettings;
 var configFilePath = './settings.conf';
 
@@ -55,7 +54,6 @@ function removeUrlFromComicList(comicUrl) {
       break;
     }
   }
-
 }
 
 function getComicPicturesFromUrl(comicUrl) {
@@ -148,8 +146,6 @@ function startDownload() {
   resetProgress($('#comicUrlsList').find('tr').length);
   var downloadRows = getDownloadRows();
   async.eachLimit(downloadRows, 5, function(currentRow, nextRow) {
-    $(currentRow.statusColumn).scrollintoview();
-
     if ($(currentRow.statusColumn).text() == '完成') return;
     // check file exist and download
     downloadComicPictureFile(currentRow.statusColumn, currentRow.path, currentRow.url, nextRow);
@@ -195,6 +191,7 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
     }
     if ((fileExist && !$('#skipIfExist').is(':checked')) || !fileExist) {
       // download
+      $(statusColumn).scrollintoview();
       $(statusColumn).text('下載中');
 
       mkdirp(path.dirname(fullPath));
@@ -202,7 +199,7 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
       var request = http.get(url, function(response) {
         response.pipe(file);
         file.on('finish', function() {
-          moveFile('./' + path.basename(fullPath), fullPath, function(){
+          moveFile('./' + path.basename(fullPath), fullPath, function() {
             $(statusColumn).html('<span class="text-success">完成</span>');
             updateProgress();
             callback();
