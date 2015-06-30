@@ -1,6 +1,7 @@
 var remote = require("remote");
 var dialog = remote.require("dialog");
 var iconv = require('iconv-lite');
+var async = require('async');
 var http = require('http');
 var request = require('request');
 var url = require('url');
@@ -9,7 +10,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 
 var appSettings;
-var configFilePath = __dirname + '/settings.conf';
+var configFilePath = './settings.conf';
 
 function initPage() {
   fs.readFile(configFilePath, function(err, data) {
@@ -145,7 +146,22 @@ function getHtmlFromUrl(targetUrl, callback) {
 
 function startDownload() {
   resetProgress($('#comicUrlsList').find('tr').length);
-  $('#comicUrlsList').find('tr').each(function() {
+  var downloadRows = getDownloadRows();
+  async.eachLimit(downloadRows, 5, function(currentRow, nextRow) {
+    $(currentRow.statusColumn).scrollintoview();
+
+    if ($(currentRow.statusColumn).text() == '完成') return;
+    // check file exist and download
+    downloadComicPictureFile(currentRow.statusColumn, currentRow.path, currentRow.url, nextRow);
+  }, function() {
+    console.log('finished');
+  });
+}
+
+function getDownloadRows() {
+  var downloadRows = [];
+
+  $('#comicUrlsList').find('tr').each(function(index) {
     var statusColumn;
     var filePath;
     var url;
@@ -157,16 +173,20 @@ function startDownload() {
       } else if (index == 2) {
         url = $(this).text();
       }
-    })
-    if ($(statusColumn).text() == '完成') return;
+    });
 
-    // check file exist and download
-    downloadComicPictureFile(statusColumn, filePath, url);
-
+    var row = {
+      rowIndex: index,
+      statusColumn: statusColumn,
+      path: filePath,
+      url: url
+    };
+    downloadRows.push(row);
   });
+  return downloadRows;
 }
 
-function downloadComicPictureFile(statusColumn, filePath, url) {
+function downloadComicPictureFile(statusColumn, filePath, url, callback) {
   var fullPath = $('#saveComicDialog').text() + "/" + filePath;
   fs.access(fullPath, fs.F_OK, function(err) {
     var fileExist = false;
@@ -182,15 +202,29 @@ function downloadComicPictureFile(statusColumn, filePath, url) {
       var request = http.get(url, function(response) {
         response.pipe(file);
         file.on('finish', function() {
-          fs.rename('./' + path.basename(fullPath), fullPath);
-          $(statusColumn).html('<span class="text-success">完成</span>');
-          updateProgress();
+          moveFile('./' + path.basename(fullPath), fullPath, function(){
+            $(statusColumn).html('<span class="text-success">完成</span>');
+            updateProgress();
+            callback();
+          });
         });
       });
     } else {
       $(statusColumn).text('已存在');
       updateProgress();
+      callback();
     }
+  });
+}
+
+function moveFile(fromPath, toPath, callback) {
+  var streamFrom = fs.createReadStream(fromPath);
+  var streamTo = fs.createWriteStream(toPath);
+
+  streamFrom.pipe(streamTo);
+  streamFrom.on('end', function() {
+    fs.unlinkSync(fromPath);
+    callback();
   });
 }
 
