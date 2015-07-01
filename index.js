@@ -122,7 +122,7 @@ function appendComicPictureUrlToTable(comicName, comicVol, urlIndex) {
   var rowHtml = "";
   var urlSplit = comicVol.Urls[urlIndex].split("/");
   rowHtml += "<tr>";
-  rowHtml += "<td width=\"15%\">未下載</td>";
+  rowHtml += "<td width=\"15%\"><i class=\"fa fa-fw fa-link\"></i> 未下載</td>";
   rowHtml += "<td width=\"40%\">" + comicName + "/" + comicVol.Vol + "/" + urlSplit[urlSplit.length - 1] + "</td>";
   rowHtml += "<td width=\"45%\">" + comicVol.Urls[urlIndex] + "</td>";
   rowHtml += "</tr>";
