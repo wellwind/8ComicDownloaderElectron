@@ -1,5 +1,7 @@
 8ComicDownloader (Electron Version) 1.0 Last Update: 2015/07/01
 
+![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/sreenshots/app-screenshot.png)
+
 簡介
 ================
 一個簡單從8Comic網站下載漫畫的程式，最新版本[按此下載](http://wellwind.github.io/8comicdownloader-electron/8comicdownloader-electron-latest.zip)。
