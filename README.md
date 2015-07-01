@@ -8,7 +8,7 @@
 
 使用方式
 ================
-1. 下載8comicdownloader-electron-1.0.zip
+1. 下載8comicdownloader-electron-latest.zip
 2. 解壓縮並執行8Comicdownloader.exe
 3. 在[漫畫目錄]設定漫畫存放的目錄
 4. 8Comicdownloader.exe畫面可以選擇分析最後N集漫畫網址，或目前所有集數的網址
