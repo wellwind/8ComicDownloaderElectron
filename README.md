@@ -6,7 +6,7 @@
 ================
 一個簡單從8Comic網站下載漫畫的程式，最新版本[按此下載](http://wellwind.github.io/8comicdownloader-electron/8comicdownloader-electron-latest.zip)。
 
-本程式從 https://github.com/wellwind/8ComicDownloader 改進，修改過去的bug並增強功能，同時使用GitHub推出的Electron做為框架，理論上可以達到跨平台目標，但沒有環境可測是目前僅確定Windows系統可以正常運行，歡迎高手。
+本程式從 https://github.com/wellwind/8ComicDownloader 改進，修改過去的bug並增強功能，同時使用GitHub推出的Electron做為框架，理論上可以達到跨平台目標，但沒有環境可測試目前僅確定Windows系統可以正常運行，歡迎高手幫忙試玩看看(須自行build source code)。
 
 使用方式
 ================
@@ -28,7 +28,8 @@
 
 注意事項
 ================
-- 必須安裝[[.Net Framework 4](http://www.microsoft.com/zh-tw/download/details.aspx?id=17718)]才可執行
+- Windows必須安裝[[.Net Framework 4](http://www.microsoft.com/zh-tw/download/details.aspx?id=17718)]才可執行
+- 目前是出的可執行檔都只有Windows版，由於我目前沒有Linux/Mac環境可測試，Linux/Mac使用者需要再等等
 - 本程式僅供網路測試，請勿做為商業或任何不法用途
 
 版本紀錄
