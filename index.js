@@ -1,5 +1,8 @@
 var remote = require("remote");
 var dialog = remote.require("dialog");
+var Menu = remote.require('menu');
+var MenuItem = remote.require('menu-item');
+var clipboard = require('clipboard');
 var iconv = require('iconv-lite');
 var async = require('async');
 var http = require('http');
@@ -14,6 +17,32 @@ var appSettings;
 var configFilePath = './settings.conf';
 
 function initPage() {
+  readAppSettings();
+  var menu = new Menu();
+  menu.append(
+    new MenuItem({
+      label: '貼上',
+      click: function() {
+        $('#addComicUrl').val(clipboard.readText());
+      }
+    }));
+  menu.append(
+    new MenuItem({
+      label: '清除',
+      click: function() {
+        $('#addComicUrl').val('');
+      }
+    }));
+    
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    if ($(e.srcElement).attr('id') == 'addComicUrl') {
+      menu.popup(remote.getCurrentWindow());
+    }
+  }, false);
+}
+
+function readAppSettings() {
   fs.readFile(configFilePath, function(err, data) {
     if (err) {
       if (err.toString().indexOf('no such file or directory')) {
