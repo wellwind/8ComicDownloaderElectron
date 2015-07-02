@@ -8,8 +8,7 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
-var sys = require('sys')
-var exec = require('child_process').exec;
+var shell = require('shell');
 
 var appSettings;
 var configFilePath = './settings.conf';
@@ -251,7 +250,6 @@ function updateProgress() {
 }
 
 $(document).ready(function() {
-  remote.getCurrentWindow().closeDevTools();
   initPage();
   $("#setComicFolder").click(function() {
     dialog.showOpenDialog({
@@ -267,7 +265,7 @@ $(document).ready(function() {
   });
 
   $('#openComicFolder').click(function() {
-    exec('explorer ' + $('#saveComicDialog').text());
+    shell.openItem($('#saveComicDialog').text());
   });
 
   $('#addComicUrl').blur(function() {
