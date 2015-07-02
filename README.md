@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.0 Last Update: 2015/07/01
+8ComicDownloader (Electron Version) 1.1 Last Updated: 2015/07/02
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
@@ -34,6 +34,12 @@
 
 版本紀錄
 ================
+v1.1 - 2015/07/02
+- 調整開發工具不顯示的方式, 以免開啟程式時畫面會閃動
+- 調整開啟漫畫資料夾的方式, 以確保之後可以正確跨平台
+- 改變[取得漫畫清單]按鈕按下後移至清單最後一筆的顯示方式
+- 由於Electron沒有辦法使用滑鼠右鍵貼上網址, 因此針對輸入漫畫網址文字方塊加入右鍵選單
+
 v1.0 - 2015/07/01
 - [版本] 1.0版release
 - 改善過去C#版本單執行緒，加快下載速度
