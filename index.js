@@ -102,8 +102,7 @@ function getComicPicturesFromList(comicUrl, fetchAll, lastVols) {
     }
 
     // scroll list to bottom
-    var objDiv = document.getElementById("pictureListContainer");
-    objDiv.scrollTop = objDiv.scrollHeight;
+    $('#pictuerList').find('tr').last().scrollintoview();
   });
 }
 
