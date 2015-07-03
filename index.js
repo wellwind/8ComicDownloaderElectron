@@ -33,7 +33,7 @@ function initPage() {
         $('#addComicUrl').val('');
       }
     }));
-    
+
   window.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     if ($(e.srcElement).attr('id') == 'addComicUrl') {
@@ -83,6 +83,30 @@ function removeUrlFromComicList(comicUrl) {
       appSettingsToComicList();
       break;
     }
+  }
+}
+
+function getCorrectComicUrl(url, callback) {
+  var comicUrl = '';
+  if (url.indexOf("www") >= 0) {
+    getHtmlFromUrl(url, function(data){
+      var catId = data
+        .split('<a href=\'#\' onclick="cview')[1]
+        .split(',')[1]
+        .split(')')[0];
+
+      var prefix = "cool-";
+      if($.inArray(parseInt(catId), [10, 11, 13, 14, 3, 8, 15, 16, 18, 20]) > -1){
+        prefix = "best-manga-";
+      }
+      var urlSplit = url.split("?")[0];
+      var urlSplit = urlSplit.split("/");
+      comicUrl = "http://new.comicvip.com/show/" + prefix + urlSplit[urlSplit.length - 1] + "?ch=1";
+      callback(comicUrl);
+    });
+  } else if (url.indexOf("new") >= 0) {
+    comicUrl = url.split("?")[0] + "?ch=1";
+    callback(comicUrl);
   }
 }
 
@@ -297,20 +321,14 @@ $(document).ready(function() {
   });
 
   $('#addComicUrl').blur(function() {
-    if ($(this).val() == '') return;
 
-    if ($(this).val().indexOf("www") >= 0) {
-      var url = $(this).val().split("?")[0];
-      var urlSplit = url.split("/");
-      $(this).val("http://new.comicvip.com/show/cool-" + urlSplit[urlSplit.length - 1] + "?ch=1");
-    } else if ($(this).val().indexOf("new") >= 0) {
-      $(this).val($(this).val().split("?")[0] + "?ch=1");
-    }
   });
 
   $('#addComicUrlButton').click(function() {
-    var comicUrl = $('#addComicUrl').val();
-    getComicPicturesFromUrl(comicUrl);
+    getCorrectComicUrl($('#addComicUrl').val(), function(comicUrl){
+      $('#addComicUrl').val(comicUrl);
+      getComicPicturesFromUrl(comicUrl);
+    });
   });
 
   $('#getPictureList').click(function() {
