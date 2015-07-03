@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.1 Last Updated: 2015/07/02
+8ComicDownloader (Electron Version) 1.2 Last Updated: 2015/07/03
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
