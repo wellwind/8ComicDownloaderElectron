@@ -17,29 +17,9 @@ var appSettings;
 var configFilePath = './settings.conf';
 
 function initPage() {
+  $("#oneKeyDownload").tooltip();
   readAppSettings();
-  var menu = new Menu();
-  menu.append(
-    new MenuItem({
-      label: '貼上',
-      click: function() {
-        $('#addComicUrl').val(clipboard.readText());
-      }
-    }));
-  menu.append(
-    new MenuItem({
-      label: '清除',
-      click: function() {
-        $('#addComicUrl').val('');
-      }
-    }));
-
-  window.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    if ($(e.srcElement).attr('id') == 'addComicUrl') {
-      menu.popup(remote.getCurrentWindow());
-    }
-  }, false);
+  setRightMenu();
 }
 
 function readAppSettings() {
@@ -71,6 +51,31 @@ function appSettingsToComicList() {
   }
 }
 
+function setRightMenu() {
+  var menu = new Menu();
+  menu.append(
+    new MenuItem({
+      label: '貼上',
+      click: function() {
+        $('#addComicUrl').val(clipboard.readText());
+      }
+    }));
+  menu.append(
+    new MenuItem({
+      label: '清除',
+      click: function() {
+        $('#addComicUrl').val('');
+      }
+    }));
+
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    if ($(e.srcElement).attr('id') == 'addComicUrl') {
+      menu.popup(remote.getCurrentWindow());
+    }
+  }, false);
+}
+
 function saveAppSettings() {
   fs.writeFile(configFilePath, JSON.stringify(appSettings));
 }
@@ -89,14 +94,14 @@ function removeUrlFromComicList(comicUrl) {
 function getCorrectComicUrl(url, callback) {
   var comicUrl = '';
   if (url.indexOf("www") >= 0) {
-    getHtmlFromUrl(url, function(data){
+    getHtmlFromUrl(url, function(data) {
       var catId = data
         .split('<a href=\'#\' onclick="cview')[1]
         .split(',')[1]
         .split(')')[0];
 
       var prefix = "cool-";
-      if($.inArray(parseInt(catId), [10, 11, 13, 14, 3, 8, 15, 16, 18, 20]) > -1){
+      if ($.inArray(parseInt(catId), [10, 11, 13, 14, 3, 8, 15, 16, 18, 20]) > -1) {
         prefix = "best-manga-";
       }
       var urlSplit = url.split("?")[0];
@@ -138,7 +143,7 @@ function getComicPicturesFromUrl(comicUrl) {
   });
 }
 
-function getComicPicturesFromList(comicUrl, fetchAll, lastVols) {
+function getComicPicturesFromList(comicUrl, fetchAll, lastVols, callback) {
   getHtmlFromUrl(comicUrl, function(content) {
     var title = getComicName(content);
     var comicvolPicturesList = getComicUrlsList(content);
@@ -156,6 +161,7 @@ function getComicPicturesFromList(comicUrl, fetchAll, lastVols) {
 
     // scroll list to bottom
     $('#pictuerList').find('tr').last().scrollintoview();
+    callback();
   });
 }
 
@@ -320,12 +326,10 @@ $(document).ready(function() {
     shell.openItem($('#saveComicDialog').text());
   });
 
-  $('#addComicUrl').blur(function() {
-
-  });
+  $('#addComicUrl').blur(function() {});
 
   $('#addComicUrlButton').click(function() {
-    getCorrectComicUrl($('#addComicUrl').val(), function(comicUrl){
+    getCorrectComicUrl($('#addComicUrl').val(), function(comicUrl) {
       $('#addComicUrl').val(comicUrl);
       getComicPicturesFromUrl(comicUrl);
     });
@@ -342,6 +346,24 @@ $(document).ready(function() {
     if (confirm("確定要移除[" + data + "]?")) {
       removeUrlFromComicList(comicUrl);
     }
+  });
+
+  $("#oneKeyDownload").click(function() {
+    var taskList = [];
+    $("#comicList>option").each(function() {
+      var comicUrl = $(this).val();
+      taskList.push(function(cb) {
+        getComicPicturesFromList(comicUrl, $('#getAllPictures').is(':checked'), $('#lastVols').val(), cb);
+      });
+    });
+    taskList.push(function(cb) {
+      startDownload();
+    })
+    async.parallelLimit(taskList, 1, function(err, result) {
+      console.log(err);
+      console.log(result);
+      console.log('finished');
+    });
   });
 
   $('#startDownload').click(function() {
