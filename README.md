@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.2 Last Updated: 2015/07/03
+8ComicDownloader (Electron Version) 1.3 Last Updated: 2016/09/12
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
@@ -14,7 +14,7 @@
 2. 解壓縮並執行8Comicdownloader.exe
 3. 在[漫畫目錄]設定漫畫存放的目錄
 4. 8Comicdownloader.exe畫面可以選擇分析最後N集漫畫網址，或目前所有集數的網址
-5. 從 http://www.8comic.com/ 找到想要下載的漫畫
+5. 從 http://www.comicbus.com/ 找到想要下載的漫畫
 6. 將漫畫網址貼到[請輸入漫畫網址...]欄位中
 7. 按下[加入漫畫網址]
 8. 重複步驟4-7產生所有想下載漫畫的圖片網址
@@ -34,8 +34,12 @@
 
 版本紀錄
 ================
+v1.3 - 2016/09/12
+- 修正8comic網址移到 http://www.comicbus.com/ 導致無法下載的問題
+- 更新Electron版本(v1.3.5)
+
 v1.2 - 2015/07/03
-- 修正部分漫畫輸入漫畫網址不會產生級數網址問題
+- 修正部分漫畫輸入漫畫網址不會產生集數網址問題
 
 v1.1 - 2015/07/02
 - 調整開發工具不顯示的方式, 以免開啟程式時畫面會閃動
