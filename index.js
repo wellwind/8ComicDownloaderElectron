@@ -100,16 +100,13 @@ function getCorrectComicUrl(url, callback) {
                 .split(',')[1]
                 .split(')')[0];
 
-            var prefix = "cool-";
-            if ($.inArray(parseInt(catId), [10, 11, 13, 14, 3, 8, 15, 16, 18, 20]) > -1) {
-                prefix = "best-manga-";
-            }
+            var prefix = "comic-";
             var urlSplit = url.split("?")[0];
             var urlSplit = urlSplit.split("/");
-            comicUrl = "http://new.comicvip.com/show/" + prefix + urlSplit[urlSplit.length - 1] + "?ch=1";
+            comicUrl = "http://v.comicbus.com/online/" + prefix + urlSplit[urlSplit.length - 1] + "?ch=1";
             callback(comicUrl);
         });
-    } else if (url.indexOf("new") >= 0) {
+    } else if (url.indexOf("v") >= 0) {
         comicUrl = url.split("?")[0] + "?ch=1";
         callback(comicUrl);
     }
@@ -161,7 +158,9 @@ function getComicPicturesFromList(comicUrl, fetchAll, lastVols, callback) {
 
         // scroll list to bottom
         $('#pictuerList').find('tr').last().scrollintoview();
-        callback();
+        if(callback != null){
+            callback();
+        }
     });
 }
 
@@ -191,7 +190,7 @@ function getHtmlFromUrl(targetUrl, callback) {
         url: targetUrl,
         encoding: null
     }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
+        if (err == null && response.statusCode == 200) {
             var str = iconv.decode(new Buffer(body), "big5");
             callback(str);
         } else {
