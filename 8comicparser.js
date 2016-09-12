@@ -23,7 +23,7 @@ function urlCreator(subKey, itemId, vol, page) {
   var code = subKey.substr(10);
   var hash = subKey.substr(getHash(page) + 10, 3);
 
-  return "http://img" + sid + ".8comic.com/" + did + "/" + itemId + "/" + vol + "/" + padDigits(page, 3) + "_" + hash + ".jpg";
+  return "http://img" + sid + ".6comic.com:99/" + did + "/" + itemId + "/" + vol + "/" + padDigits(page, 3) + "_" + hash + ".jpg";
 }
 
 function getOnlyDigit(str) {
