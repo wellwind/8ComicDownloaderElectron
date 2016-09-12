@@ -158,7 +158,9 @@ function getComicPicturesFromList(comicUrl, fetchAll, lastVols, callback) {
 
         // scroll list to bottom
         $('#pictuerList').find('tr').last().scrollintoview();
-        callback();
+        if(callback != null){
+            callback();
+        }
     });
 }
 
