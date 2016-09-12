@@ -1,7 +1,7 @@
 {
   "name": "8comic-downloader-electron",
-  "version": "1.0",
-  "description": "8comic.com downloader",
+  "version": "1.3",
+  "description": "8comic(comicbus.com) downloader",
   "main": "main.js",
   "devDependencies": {
     "grunt": "~0.4.1"
