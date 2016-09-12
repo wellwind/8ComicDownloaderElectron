@@ -109,7 +109,7 @@ function getCorrectComicUrl(url, callback) {
             comicUrl = "http://new.comicvip.com/show/" + prefix + urlSplit[urlSplit.length - 1] + "?ch=1";
             callback(comicUrl);
         });
-    } else if (url.indexOf("new") >= 0) {
+    } else if (url.indexOf("v") >= 0) {
         comicUrl = url.split("?")[0] + "?ch=1";
         callback(comicUrl);
     }
