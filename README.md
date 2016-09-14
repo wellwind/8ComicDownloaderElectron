@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.3 Last Updated: 2016/09/12
+8ComicDownloader (Electron Version) 1.3.1 Last Updated: 2016/09/14
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
@@ -34,6 +34,9 @@
 
 版本紀錄
 ================
+v1.3.1 - 2016/09/14
+- 修正打包檔案時不小心把不必要的log檔打包進去導致檔案龐大的問題
+
 v1.3 - 2016/09/12
 - 修正8comic網址移到 http://www.comicbus.com/ 導致無法下載的問題
 - 更新Electron版本(v1.3.5)
