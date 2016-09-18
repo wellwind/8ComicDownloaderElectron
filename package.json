@@ -1,40 +1,39 @@
 {
-  "name": "8comic-downloader-electron",
-  "version": "1.3.1",
-  "description": "8comic(comicbus.com) downloader",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
+    "name": "8comic-downloader-electron",
+    "version": "1.3.1",
+    "description": "8comic(comicbus.com) downloader",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
     "clean": "rm -rf 8comic-downloader-electron* & rm -rf app.asar*",
-    "build_all": "electron-packager . --all --asar=true --overwrite --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-* & node archive-packages.js"
-  },
-  "devDependencies": {
-    "archiver": "^1.1.0",
-    "electron": "^1.4.0",
-    "electron-packager": "^8.0.0"
-  },
-  "dependencies": {
-    "async": "^1.3.0",
-    "bootstrap": "^3.3.7",
-    "iconv-lite": "^0.4.10",
-    "jquery": "^2.1.4",
-    "mkdirp": "^0.5.1",
-    "request": "^2.58.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wellwind/8ComicDownloaderElectron.git"
-  },
-  "keywords": [
-    "comic",
-    "8comic",
-    "comicbus",
-    "downloader"
-  ],
-  "author": "Wellwind",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/wellwind/8ComicDownloaderElectron/issues"
-  },
-  "homepage": "https://github.com/wellwind/8ComicDownloaderElectron#readme"
+        "build_all": "electron-packager . --all --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-* & node archive-packages.js",
+        "build_win32": "electron-packager . --platform=win32 --arch=x64 --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-* & node archive-packages.js"
+    },
+    "devDependencies": {
+        "electron": "^1.4.0",
+        "electron-packager": "^8.0.0"
+    },
+    "dependencies": {
+        "async": "^1.3.0",
+        "bootstrap": "^3.3.7",
+        "iconv-lite": "^0.4.10",
+        "jquery": "^2.1.4",
+        "mkdirp": "^0.5.1",
+        "request": "^2.58.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wellwind/8ComicDownloaderElectron.git"
+    },
+    "keywords": [
+        "comic",
+        "8comic",
+        "comicbus",
+        "downloader"
+    ],
+    "author": "Wellwind",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/wellwind/8ComicDownloaderElectron/issues"
+    },
 }
