@@ -43,6 +43,5 @@ jspm_packages
 # User should use their own settings file
 settings.conf
 
-# Skip pack file
-app.asar
-app.asar.unpacked
+# Skip pack files
+8comic-downloader-electron*
