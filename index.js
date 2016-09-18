@@ -1,5 +1,5 @@
 const {remote} = require('electron');
-const {Menu, MenuItem, dialog} = remote
+const {Menu, MenuItem, app, dialog} = remote
 const {
     shell,
     clipboard
@@ -27,7 +27,7 @@ function readAppSettings() {
         if (err) {
             if (err.toString().indexOf('no such file or directory')) {
                 var settings = {
-                    'comicFolder': __dirname,
+                    'comicFolder': path.dirname(app.getPath("exe")),
                     'comicList': []
                 };
                 data = JSON.stringify(settings);
