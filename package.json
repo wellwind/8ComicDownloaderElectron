@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "clean": "rm -rf 8comic-downloader-electron* & rm -rf app.asar",
+    "clean": "rm -rf 8comic-downloader-electron* & rm -rf app.asar*",
     "build_all": "electron-packager . --all --asar=true --overwrite --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-* & node archive-packages.js"
   },
   "devDependencies": {
