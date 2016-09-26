@@ -10,8 +10,8 @@
 
 使用方式
 ================
-1. 下載8comicdownloader-electron-latest.zip
-2. 解壓縮並執行8Comicdownloader.exe
+1. 到 https://github.com/wellwind/8ComicDownloaderElectron/releases 下載最新版的程式
+2. 解壓縮並執行8comic-downloader-elextron.exe
 3. 在[漫畫目錄]設定漫畫存放的目錄
 4. 8Comicdownloader.exe畫面可以選擇分析最後N集漫畫網址，或目前所有集數的網址
 5. 從 http://www.comicbus.com/ 找到想要下載的漫畫
@@ -19,6 +19,10 @@
 7. 按下[加入漫畫網址]
 8. 重複步驟4-7產生所有想下載漫畫的圖片網址
 9. 按下[開始下載]按鈕，即可將漫畫下載到電腦中
+
+更新方式
+================
+目前不支援自動更新，若有新版請下載該版本的app.asar檔案，先關掉下載程式後，將app.asar覆蓋掉原執行程式下的resources\app.asar即可完成更新。
 
 進階功能
 ================
