@@ -45,3 +45,4 @@ settings.conf
 
 # Skip pack files
 8comic-downloader-electron*
+app.asar
