@@ -7,7 +7,7 @@
         "start": "electron .",
         "clean": "rm -rf 8comic-downloader-electron* & rm -rf app.asar*",
         "build_all": "electron-packager . --all --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js",
-    "build_mac": "electron-packager . --platform=darwin --arch=x64 --asar=true --overwrite --app-bundle-id=\"8comicdownloader.tw.idv.wellwind\" --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js",
+        "build_mac": "electron-packager . --platform=darwin --arch=x64 --asar=true --overwrite --app-bundle-id=\"8comicdownloader.tw.idv.wellwind\" --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js",
         "build_win32": "electron-packager . --platform=win32 --arch=x64 --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js"
     },
     "devDependencies": {
