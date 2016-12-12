@@ -9,13 +9,14 @@ var async = require('async');
 var http = require('http');
 var request = require('request');
 var url = require('url');
+var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 
 var appSettings;
-var configFilePath = './settings.conf';
-
+var configFilePath = os.homedir() + '/8ComicDownloader/settings.conf';
+console.log(configFilePath);
 function initPage() {
     $("#oneKeyDownload").tooltip();
     readAppSettings();
@@ -26,8 +27,10 @@ function readAppSettings() {
     fs.readFile(configFilePath, function(err, data) {
         if (err) {
             if (err.toString().indexOf('no such file or directory')) {
+                mkdirp(path.dirname(configFilePath));
+
                 var settings = {
-                    'comicFolder': path.dirname(app.getPath("exe")),
+                    'comicFolder': path.dirname(configFilePath),
                     'comicList': []
                 };
                 data = JSON.stringify(settings);
