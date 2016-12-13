@@ -43,6 +43,9 @@ jspm_packages
 # User should use their own settings file
 settings.conf
 
+# build file
+dist
+
 # Skip pack files
 8comic-downloader-electron*
 app.asar
