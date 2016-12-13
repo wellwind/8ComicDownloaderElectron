@@ -28,12 +28,14 @@ function zipFolder(srcFolder, zipFilePath, callback) {
 }
 
 var parallelFuncs = {};
-var files = fs.readdirSync(".");
+var folder = "./dist/";
+var files = fs.readdirSync(folder);
+
 files.forEach(function(file) {
-    if (file.indexOf("8comic-downloader-electron-") === 0 && fs.statSync(file).isDirectory()) {
-        var zipFile = file + "-v" + package.version + ".zip";
+    if (file.indexOf("8comic-downloader-electron-") === 0 && fs.statSync(folder + file).isDirectory()) {
+        var zipFile = folder + file + "-v" + package.version + ".zip";
         parallelFuncs[zipFile] = function(callback) {
-            zipFolder("./" + file, zipFile, function(err) {
+            zipFolder(folder + file, zipFile, function(err) {
                 if (err) {
                     callback(err, false);
                 } else {

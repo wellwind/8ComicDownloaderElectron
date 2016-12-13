@@ -10,7 +10,8 @@ function createWindow () {
     width: 1024,
     height: 768,
     'min-width': 1024,
-    'min-height': 768
+    'min-height': 768,
+    icon: `${__dirname}/assets/icons/icon.png`
   });
 
   // and load the index.html of the app.
