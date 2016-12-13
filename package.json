@@ -6,13 +6,14 @@
   "scripts": {
     "start": "electron .",
     "clean": "rm -rf 8comic-downloader-electron* & rm -rf app.asar*",
-    "build_all": "electron-packager . --all --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js",
-    "build_mac": "electron-packager . --platform=darwin --arch=x64 --asar=true --overwrite --app-bundle-id=\"8comicdownloader.tw.idv.wellwind\" --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js",
-    "build_win32": "electron-packager . --platform=win32 --arch=x64 --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron* & node archive-packages.js"
+    "build_mac": "electron-packager . --platform=darwin --arch=x64 --out=./dist --icon=assets/icons/icon.icns --asar=true --overwrite --app-bundle-id=\"tw.idv.wellwind.8comicdownloaderelectron\" --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron*",
+    "build_win32": "electron-packager . --platform=win32 --arch=x64 --out=./dist --icon=assets/icons/icon.png --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron*",
+    "build_linux": "electron-packager . --platform=linux --arch=x64 --out=./dist --asar=true --overwrite --version=1.4.0 --ignore=node_modules/electron-* --ignore=node_modules/archiver --ignore=8comic-downloader-electron*",
+    "build_all": "npm run build_mac & npm run build_win32 & npm run build_linux & node archive-packages.js"
   },
   "devDependencies": {
     "archiver": "^1.2.0",
-    "electron": "^1.4.0",
+    "electron": "^1.4.12",
     "electron-packager": "^8.0.0"
   },
   "dependencies": {
