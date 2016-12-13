@@ -261,11 +261,13 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
             // make dir
             mkdirp(path.dirname(fullPath));
             // download
-            var file = fs.createWriteStream(path.basename(fullPath));
+            var downloadTmpPath = os.tmpdir() + '/' + path.basename(fullPath)
+            var file = fs.createWriteStream(downloadTmpPath);
+
             var request = http.get(url, function(response) {
                 response.pipe(file);
                 file.on('finish', function() {
-                    moveFile('./' + path.basename(fullPath), fullPath, function() {
+                    moveFile(downloadTmpPath, fullPath, function() {
                         $(statusColumn).html('<span class="text-success"><i class="fa fa-check"></i> 完成</span>');
                         updateProgress();
                         callback();
