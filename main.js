@@ -1,10 +1,10 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 1024,
@@ -29,33 +29,85 @@ function createWindow () {
   });
 
   // Create the Application's main menu
-  var template = [{
-    label: "Application",
-      submenu: [
-        { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-        { type: "separator" },
-        { label: "Close", accelerator: "Command+W", click: function() { win.close() }},
-        { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
-      ]}, {
-        label: "Edit",
-        submenu: [
-          { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-          { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-          { type: "separator" },
-          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-          { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-       ]}, {
-         label: "View",
-         submenu: [
-          { label: "Developer Tool", click: function() {win.webContents.openDevTools();}}
-      ]}
-    ];
-
+  if (process.platform === 'darwin') {
+    Menu.setApplicationMenu(Menu.buildFromTemplate(getDarwinMenu()));
+  } else {
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  }
 }
 
+function getDarwinMenu() {
+  return [{
+    label: "Application",
+    submenu: [{
+      label: "About Application",
+      selector: "orderFrontStandardAboutPanel:"
+    }, {
+      type: "separator"
+    }, {
+      label: "Close",
+      accelerator: "Command+W",
+      click: function () {
+        win.close()
+      }
+    }, {
+      label: "Quit",
+      accelerator: "Command+Q",
+      click: function () {
+        app.quit();
+      }
+    }]
+  }, {
+    label: "Edit",
+    submenu: [{
+      label: "Undo",
+      accelerator: "CmdOrCtrl+Z",
+      selector: "undo:"
+    }, {
+      label: "Redo",
+      accelerator: "Shift+CmdOrCtrl+Z",
+      selector: "redo:"
+    }, {
+      type: "separator"
+    }, {
+      label: "Cut",
+      accelerator: "CmdOrCtrl+X",
+      selector: "cut:"
+    }, {
+      label: "Copy",
+      accelerator: "CmdOrCtrl+C",
+      selector: "copy:"
+    }, {
+      label: "Paste",
+      accelerator: "CmdOrCtrl+V",
+      selector: "paste:"
+    }, {
+      label: "Select All",
+      accelerator: "CmdOrCtrl+A",
+      selector: "selectAll:"
+    }]
+  }, {
+    label: "View",
+    submenu: [{
+      label: "Developer Tool",
+      click: function () {
+        win.webContents.openDevTools();
+      }
+    }]
+  }];
+}
+
+function getSimpleMenu() {
+  return [{
+    label: "View",
+    submenu: [{
+      label: "Developer Tool",
+      click: function () {
+        win.webContents.openDevTools();
+      }
+    }]
+  }];
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
