@@ -49,3 +49,6 @@ dist
 # Skip pack files
 8comic-downloader-electron*
 app.asar
+
+# Mac OS
+.DS_Store
