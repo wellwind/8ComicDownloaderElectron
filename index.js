@@ -13,6 +13,7 @@ var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var open = require('mac-open');
 
 var appSettings;
 var configFilePath = os.homedir() + '/8ComicDownloader/settings.conf';
@@ -327,7 +328,11 @@ $(document).ready(function() {
     });
 
     $('#openComicFolder').click(function() {
-        shell.openItem($('#saveComicDialog').text());
+        if (process.platform === 'darwin') {
+            open($('#saveComicDialog').text(), { a: "Finder" }, function(error) {});
+        } else {
+            shell.openItem($('#saveComicDialog').text());
+        }
     });
 
     $('#addComicUrl').blur(function() {});
