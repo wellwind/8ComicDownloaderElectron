@@ -1,9 +1,6 @@
 const {remote} = require('electron');
 const {Menu, MenuItem, app, dialog} = remote
-const {
-    shell,
-    clipboard
-} = require('electron');
+const { shell, clipboard} = require('electron');
 var iconv = require('iconv-lite');
 var async = require('async');
 var http = require('http');
@@ -14,18 +11,20 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var open = require('mac-open');
+var package = require("./package.json");
 
 var appSettings;
 var configFilePath = os.homedir() + '/8ComicDownloader/settings.conf';
-console.log(configFilePath);
+
 function initPage() {
     $("#oneKeyDownload").tooltip();
+    $("#versionText").html(package.version);
     readAppSettings();
     setRightMenu();
 }
 
 function readAppSettings() {
-    fs.readFile(configFilePath, function(err, data) {
+    fs.readFile(configFilePath, function (err, data) {
         if (err) {
             if (err.toString().indexOf('no such file or directory')) {
                 mkdirp(path.dirname(configFilePath));
@@ -60,19 +59,19 @@ function setRightMenu() {
     menu.append(
         new MenuItem({
             label: '貼上',
-            click: function() {
+            click: function () {
                 $('#addComicUrl').val(clipboard.readText());
             }
         }));
     menu.append(
         new MenuItem({
             label: '清除',
-            click: function() {
+            click: function () {
                 $('#addComicUrl').val('');
             }
         }));
 
-    window.addEventListener('contextmenu', function(e) {
+    window.addEventListener('contextmenu', function (e) {
         e.preventDefault();
         if ($(e.srcElement).attr('id') == 'addComicUrl') {
             menu.popup(remote.getCurrentWindow());
@@ -98,7 +97,7 @@ function removeUrlFromComicList(comicUrl) {
 function getCorrectComicUrl(url, callback) {
     var comicUrl = '';
     if (url.indexOf("www") >= 0) {
-        getHtmlFromUrl(url, function(data) {
+        getHtmlFromUrl(url, function (data) {
             var catId = data
                 .split('<a href=\'#\' onclick="cview')[1]
                 .split(',')[1]
@@ -117,7 +116,7 @@ function getCorrectComicUrl(url, callback) {
 }
 
 function getComicPicturesFromUrl(comicUrl) {
-    getHtmlFromUrl(comicUrl, function(content) {
+    getHtmlFromUrl(comicUrl, function (content) {
         var title = getComicName(content);
         // check url in list
         var exist = false;
@@ -145,7 +144,7 @@ function getComicPicturesFromUrl(comicUrl) {
 }
 
 function getComicPicturesFromList(comicUrl, fetchAll, lastVols, callback) {
-    getHtmlFromUrl(comicUrl, function(content) {
+    getHtmlFromUrl(comicUrl, function (content) {
         var title = getComicName(content);
         var comicvolPicturesList = getComicUrlsList(content);
 
@@ -162,7 +161,7 @@ function getComicPicturesFromList(comicUrl, fetchAll, lastVols, callback) {
 
         // scroll list to bottom
         $('#pictuerList').find('tr').last().scrollintoview();
-        if(callback != null){
+        if (callback != null) {
             callback();
         }
     });
@@ -193,7 +192,7 @@ function getHtmlFromUrl(targetUrl, callback) {
     request({
         url: targetUrl,
         encoding: null
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         if (err == null && response.statusCode == 200) {
             var str = iconv.decode(new Buffer(body), "big5");
             callback(str);
@@ -208,12 +207,12 @@ function startDownload() {
     resetProgress($('#comicUrlsList').find('tr').length);
     var downloadRows = getDownloadRows();
     var parallelFunctions = [];
-    $(downloadRows).each(function(index, row) {
-        parallelFunctions.push(function(cb) {
+    $(downloadRows).each(function (index, row) {
+        parallelFunctions.push(function (cb) {
             downloadComicPictureFile(row.statusColumn, row.path, row.url, cb);
         });
     });
-    async.parallelLimit(parallelFunctions, 5, function(err, result) {
+    async.parallelLimit(parallelFunctions, 5, function (err, result) {
         console.log(err);
         console.log(result);
         console.log('finished');
@@ -223,11 +222,11 @@ function startDownload() {
 function getDownloadRows() {
     var downloadRows = [];
 
-    $('#comicUrlsList').find('tr').each(function(index) {
+    $('#comicUrlsList').find('tr').each(function (index) {
         var statusColumn;
         var filePath;
         var url;
-        $(this).find('td').each(function(index) {
+        $(this).find('td').each(function (index) {
             if (index == 0) {
                 statusColumn = $(this);
             } else if (index == 1) {
@@ -250,7 +249,7 @@ function getDownloadRows() {
 
 function downloadComicPictureFile(statusColumn, filePath, url, callback) {
     var fullPath = $('#saveComicDialog').text() + "/" + filePath;
-    fs.access(fullPath, fs.F_OK, function(err) {
+    fs.access(fullPath, fs.F_OK, function (err) {
         var fileExist = false;
         if (!err) {
             fileExist = true;
@@ -265,10 +264,10 @@ function downloadComicPictureFile(statusColumn, filePath, url, callback) {
             var downloadTmpPath = os.tmpdir() + '/' + path.basename(fullPath)
             var file = fs.createWriteStream(downloadTmpPath);
 
-            var request = http.get(url, function(response) {
+            var request = http.get(url, function (response) {
                 response.pipe(file);
-                file.on('finish', function() {
-                    moveFile(downloadTmpPath, fullPath, function() {
+                file.on('finish', function () {
+                    moveFile(downloadTmpPath, fullPath, function () {
                         $(statusColumn).html('<span class="text-success"><i class="fa fa-check"></i> 完成</span>');
                         updateProgress();
                         callback();
@@ -288,7 +287,7 @@ function moveFile(fromPath, toPath, callback) {
     var streamTo = fs.createWriteStream(toPath);
 
     streamFrom.pipe(streamTo);
-    streamFrom.on('end', function() {
+    streamFrom.on('end', function () {
         fs.unlinkSync(fromPath);
         callback();
     });
@@ -312,14 +311,14 @@ function updateProgress() {
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     initPage();
-    $("#setComicFolder").click(function() {
+    $("#setComicFolder").click(function () {
         dialog.showOpenDialog({
-                defaultPath: $("#saveComicDialog").text(),
-                properties: ["openDirectory"]
-            },
-            function(directoryPath) {
+            defaultPath: $("#saveComicDialog").text(),
+            properties: ["openDirectory"]
+        },
+            function (directoryPath) {
                 $("#saveComicDialog").text(directoryPath);
                 appSettings.comicFolder = directoryPath;
                 saveAppSettings();
@@ -327,29 +326,29 @@ $(document).ready(function() {
         );
     });
 
-    $('#openComicFolder').click(function() {
+    $('#openComicFolder').click(function () {
         if (process.platform === 'darwin') {
-            open($('#saveComicDialog').text(), { a: "Finder" }, function(error) {});
+            open($('#saveComicDialog').text(), { a: "Finder" }, function (error) { });
         } else {
             shell.openItem($('#saveComicDialog').text());
         }
     });
 
-    $('#addComicUrl').blur(function() {});
+    $('#addComicUrl').blur(function () { });
 
-    $('#addComicUrlButton').click(function() {
-        getCorrectComicUrl($('#addComicUrl').val(), function(comicUrl) {
+    $('#addComicUrlButton').click(function () {
+        getCorrectComicUrl($('#addComicUrl').val(), function (comicUrl) {
             $('#addComicUrl').val(comicUrl);
             getComicPicturesFromUrl(comicUrl);
         });
     });
 
-    $('#getPictureList').click(function() {
+    $('#getPictureList').click(function () {
         var comicUrl = $('#comicList').val();
         getComicPicturesFromList(comicUrl, $('#getAllPictures').is(':checked'), $('#lastVols').val());
     });
 
-    $('#removeFromComicList').click(function() {
+    $('#removeFromComicList').click(function () {
         var data = $('#comicList').find(":selected").text();
         var comicUrl = $('#comicList').val();
         if (confirm("確定要移除[" + data + "]?")) {
@@ -357,33 +356,33 @@ $(document).ready(function() {
         }
     });
 
-    $("#oneKeyDownload").click(function() {
+    $("#oneKeyDownload").click(function () {
         var taskList = [];
-        $("#comicList>option").each(function() {
+        $("#comicList>option").each(function () {
             var comicUrl = $(this).val();
-            taskList.push(function(cb) {
+            taskList.push(function (cb) {
                 getComicPicturesFromList(comicUrl, $('#getAllPictures').is(':checked'), $('#lastVols').val(), cb);
             });
         });
-        taskList.push(function(cb) {
+        taskList.push(function (cb) {
             startDownload();
         })
-        async.parallelLimit(taskList, 1, function(err, result) {
+        async.parallelLimit(taskList, 1, function (err, result) {
             console.log(err);
             console.log(result);
             console.log('finished');
         });
     });
 
-    $('#startDownload').click(function() {
+    $('#startDownload').click(function () {
         startDownload();
     });
 
-    $('#clearPictureUrls').click(function() {
+    $('#clearPictureUrls').click(function () {
         $('#comicUrlsList').html('');
     });
 
-    $('#getAllPictures').change(function() {
+    $('#getAllPictures').change(function () {
         if ($('#getAllPictures').is(':checked')) {
             $('#lastVols').attr('disabled', true);
         } else {
