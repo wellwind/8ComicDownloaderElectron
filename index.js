@@ -11,12 +11,14 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var open = require('mac-open');
+var package = require("./package.json");
 
 var appSettings;
 var configFilePath = os.homedir() + '/8ComicDownloader/settings.conf';
 
 function initPage() {
     $("#oneKeyDownload").tooltip();
+    $("#versionText").html(package.version);
     readAppSettings();
     setRightMenu();
 }
