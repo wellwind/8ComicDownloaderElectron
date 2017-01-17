@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.5 Last Updated: 2017/01/18
+8ComicDownloader (Electron Version) 1.5.1 Last Updated: 2017/01/18
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
@@ -37,7 +37,7 @@
 
 版本紀錄
 ================
-v1.5 - 2017/01/17
+v1.5.1 - 2017/01/17
 - 支援Windows、Linux、Mac(是的，正式支援Linux ＆ Mac啦！)
 
 v1.4.1 - 2016/12/12
