@@ -1,4 +1,4 @@
-8ComicDownloader (Electron Version) 1.3.1 Last Updated: 2016/09/14
+8ComicDownloader (Electron Version) 1.5 Last Updated: 2017/01/18
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
 
@@ -33,11 +33,13 @@
 注意事項
 ================
 - Windows必須安裝[[.Net Framework 4](http://www.microsoft.com/zh-tw/download/details.aspx?id=17718)]才可執行
-- 目前是出的可執行檔都只有Windows版，由於我目前沒有Linux/Mac環境可測試，Linux/Mac使用者需要再等等
 - 本程式僅供網路測試，請勿做為商業或任何不法用途
 
 版本紀錄
 ================
+v1.5 - 2017/01/17
+- 支援Windows、Linux、Mac(是的，正式支援Linux ＆ Mac啦！)
+
 v1.4.1 - 2016/12/12
 - 改以user的家目錄為設定檔及漫畫預設存放目錄 
 
