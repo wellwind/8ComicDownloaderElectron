@@ -89,6 +89,12 @@ function getDarwinMenu() {
   }, {
     label: "View",
     submenu: [{
+      label: "Reload",
+      accelerator: "CmdOrCtrl+R",
+      click: function() {
+        win.reload();
+      }
+    }, {
       label: "Developer Tool",
       click: function () {
         win.webContents.openDevTools();
@@ -101,6 +107,12 @@ function getSimpleMenu() {
   return [{
     label: "View",
     submenu: [{
+      label: "Reload",
+      accelerator: "CmdOrCtrl+R",
+      click: function(){
+        win.reload();
+      }
+    }, {
       label: "Developer Tool",
       click: function () {
         win.webContents.openDevTools();
