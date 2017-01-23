@@ -46,6 +46,12 @@ settings.conf
 # build file
 dist
 
+# release file
+release
+
+# package.json in src
+src/package.json
+
 # Skip pack files
 8comic-downloader-electron*
 app.asar
