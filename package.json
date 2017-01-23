@@ -13,8 +13,8 @@
     "start": "npm run build && concurrently \"electron ./dist\" \"ng build -w\"",
     "clean": "rm -rf ./dist && rm -rf ./release",
     "build": "cp ./package.json ./src/package.json && ng build",
-    "build_mac": "npm run build && electron-packager ./dist --platform=darwin --arch=x64 --out=./release --icon=assets/icons/icon.icns --asar=true --overwrite --app-bundle-id=\"tw.idv.wellwind.8comicdownloaderelectron\" --version=1.4.0",
-    "build_win32": "npm run build && electron-packager ./dist --platform=win32 --arch=x64 --out=./release --icon=assets/icons/icon.png --asar=true --overwrite --version=1.4.0",
+    "build_mac": "npm run build && electron-packager ./dist --platform=darwin --arch=x64 --out=./release --icon=src/assets/icons/icon.icns --asar=true --overwrite --app-bundle-id=\"tw.idv.wellwind.8comicdownloaderelectron\" --version=1.4.0",
+    "build_win32": "npm run build && electron-packager ./dist --platform=win32 --arch=x64 --out=./release --icon=src/assets/icons/icon.png --asar=true --overwrite --version=1.4.0",
     "build_linux": "npm run build && electron-packager ./dist --platform=linux --arch=x64 --out=./release --asar=true --overwrite --version=1.4.0"
   },
   "private": true,
