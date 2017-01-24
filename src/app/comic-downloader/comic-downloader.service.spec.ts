@@ -5,8 +5,11 @@ import { TestBed, async, inject } from '@angular/core/testing';
 import { ComicDownloaderService } from './comic-downloader.service';
 const os = window.require('os');
 const fs = window.require('fs');
+import { mkdirp } from 'mkdirp';
 
 describe('ComicDownloaderService', () => {
+
+  let service: ComicDownloaderService;
 
   beforeEach(() => {
     spyOn(os, 'homedir').and.returnValue('/foo/bar');
@@ -14,6 +17,8 @@ describe('ComicDownloaderService', () => {
     TestBed.configureTestingModule({
       providers: [ComicDownloaderService]
     });
+
+    service = TestBed.get(ComicDownloaderService);
   });
 
   it('should have basic settings file path', inject([ComicDownloaderService], (service: ComicDownloaderService) => {
@@ -36,6 +41,15 @@ describe('ComicDownloaderService', () => {
       expect(service.getConfigFilePath).toHaveBeenCalled();
       done();
     });
-    service.readSettings();    
-  })
+    service.readSettings();
+  });
+
+  it('should create directory when config file not exist', () => {
+    const errMsg = 'no such file or directory';
+    spyOn(mkdirp, 'call');
+    
+    service.handleReadSettingError(errMsg);
+
+    expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
+  });
 });
