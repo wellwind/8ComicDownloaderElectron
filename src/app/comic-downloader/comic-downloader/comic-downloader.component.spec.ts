@@ -1,8 +1,8 @@
-import { ComicDownloaderComponent } from './comic-downloader.component';
 /* tslint:disable:no-unused-variable */
+import { ComicDownloaderComponent } from './comic-downloader.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('IndexComponent', () => {
   let component: ComicDownloaderComponent;
@@ -10,9 +10,10 @@ describe('IndexComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ComicDownloaderComponent ]
+      declarations: [ComicDownloaderComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
