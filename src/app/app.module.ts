@@ -1,3 +1,4 @@
+import { ComicDownloaderModule } from './comic-downloader/comic-downloader.module';
 import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -10,13 +11,14 @@ import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    SharedModule
+    SharedModule,
+    ComicDownloaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
