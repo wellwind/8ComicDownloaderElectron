@@ -58,3 +58,6 @@ app.asar
 
 # Mac OS
 .DS_Store
+
+# karma-electron
+.electron
