@@ -1,4 +1,4 @@
-import { ElectronService } from './shared/services/electron.service';
+import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,14 +10,15 @@ import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    SharedModule
   ],
-  providers: [ElectronService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
