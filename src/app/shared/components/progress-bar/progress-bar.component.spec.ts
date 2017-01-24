@@ -43,25 +43,25 @@ describe('ProgressBarComponent', () => {
     expect(progressBar.classList).toContain('progress-bar-info');
   });
 
-  xit('should has default progress percentage', () => {
+  it('should has default progress percentage', () => {
     fixture.detectChanges();
 
     const ariaValueNow = progressBarDebug.attributes['aria-valuenow'];
-    const progressBarWidthPercent = progressBarDebug.attributes['style'];
+    const progressBarWidthPercent = progressBarDebug.styles['width'];
 
     expect(ariaValueNow).toBe('100');
-    expect(progressBarWidthPercent).toContain('width: 100%');
+    expect(progressBarWidthPercent).toContain('100%');
   });
 
-  xit('should be set progress percentage', () => {
+  it('should be set progress percentage', () => {
     component.progress = 50;
 
     fixture.detectChanges();
 
     const ariaValueNow = progressBarDebug.attributes['aria-valuenow'];
-    const progressBarWidthPercent = progressBarDebug.attributes['style'];
+    const progressBarWidthPercent = progressBarDebug.styles['width'];
 
     expect(ariaValueNow).toBe('50');
-    expect(progressBarWidthPercent).toContain('width: 50%');
+    expect(progressBarWidthPercent).toContain('50%');
   });
 });

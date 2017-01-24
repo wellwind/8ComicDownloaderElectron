@@ -15,4 +15,8 @@ export class ProgressBarComponent implements OnInit {
     this.barStyle = this.barStyle || 'success';
     this.progress = this.progress || '100';
   }
+
+  getProgressSizePercentage(){
+    return this.progress + '%';
+  }  
 }
