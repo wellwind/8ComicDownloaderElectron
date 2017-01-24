@@ -12,7 +12,7 @@ export class ComicDownloaderService {
   }
 
   readSettings() {
-    fs.readFile('foo', function(err, result){
+    fs.readFile(this.getConfigFilePath(), function(err, result){
 
     });
   }

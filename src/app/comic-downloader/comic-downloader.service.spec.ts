@@ -28,4 +28,14 @@ describe('ComicDownloaderService', () => {
     });
     service.readSettings();
   });
+
+  it('should call getConfigFilePath when calling readSettings', done => {
+    const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
+    spyOn(service, 'getConfigFilePath');
+    spyOn(fs, 'readFile').and.callFake((err, result) => {
+      expect(service.getConfigFilePath).toHaveBeenCalled();
+      done();
+    });
+    service.readSettings();    
+  })
 });
