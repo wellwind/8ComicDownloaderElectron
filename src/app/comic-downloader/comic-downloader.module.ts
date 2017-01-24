@@ -1,3 +1,4 @@
+import { ComicDownloaderService } from './comic-downloader.service';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,6 +9,9 @@ import { ComicFolderComponent } from './comic-folder/comic-folder.component';
   imports: [
     CommonModule,
     SharedModule
+  ],
+  providers: [
+    ComicDownloaderService
   ],
   declarations: [ComicDownloaderComponent, ComicFolderComponent],
   exports: [
