@@ -42,4 +42,14 @@ describe('ProgressBarComponent', () => {
 
     expect(progressBar.classList).toContain('progress-bar-info');
   });
+
+  it('should has default progress percentage', () => {
+    fixture.detectChanges();
+
+    const ariaValueNow = progressBarDebug.attributes['aria-valuenow'];
+    const progressBarWidthPercent = progressBarDebug.attributes['style'];
+
+    expect(ariaValueNow).toBe('100');
+    expect(progressBarWidthPercent).toContain('width: 100%');
+  });
 });
