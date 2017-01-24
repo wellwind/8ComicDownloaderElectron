@@ -7,10 +7,12 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ProgressBarComponent implements OnInit {
   @Input() barStyle;
+  @Input() progress;
+
   constructor() { }
 
   ngOnInit() {
     this.barStyle = this.barStyle || 'success';
+    this.progress = this.progress || '100';
   }
-
 }
