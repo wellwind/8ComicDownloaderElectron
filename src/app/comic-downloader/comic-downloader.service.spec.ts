@@ -23,7 +23,7 @@ describe('ComicDownloaderService', () => {
   it('should call fs.readFile when calling readSettings', done => {
     const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
     spyOn(fs, 'readFile').and.callFake((err, result) => {
-      expect(true).toBeTruthy();
+      expect(fs.readFile).toHaveBeenCalled();
       done();
     });
     service.readSettings();
