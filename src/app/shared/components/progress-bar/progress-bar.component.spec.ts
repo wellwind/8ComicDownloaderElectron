@@ -35,4 +35,11 @@ describe('ProgressBarComponent', () => {
 
     expect(progressBar.classList).toContain('progress-bar-success');
   });
+
+  it('should be set bootstrap color class', () => {
+    component.barStyle = 'info';
+    fixture.detectChanges();
+
+    expect(progressBar.classList).toContain('progress-bar-info');
+  });
 });
