@@ -16,7 +16,7 @@ export class ComicDownloaderService {
   readSettings() {
     let configPath = this.getConfigFilePath();
     fs.readFile(configPath, (err, result) => {
-      if(err){
+      if (err) {
         this.handleReadSettingError(err);
       }
     });
@@ -31,6 +31,8 @@ export class ComicDownloaderService {
         'comicList': []
       };
       fs.writeFile(this.getConfigFilePath(), JSON.stringify(settings));
+    } else {
+      throw err;
     }
   }
 }

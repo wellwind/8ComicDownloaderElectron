@@ -81,6 +81,15 @@ describe('ComicDownloaderService', () => {
 
       expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/8ComicDownloader/settings.conf', JSON.stringify(defaultSettings));
     });
+
+    it('should throw unknow error when read file fail', () => {
+      const errMsg = 'unknown error';
+      spyOn(service, 'handleReadSettingError').and.callThrough();
+
+      expect(() => {
+        service.handleReadSettingError(new Error(errMsg));
+      }).toThrowError('unknown error');
+    });
   });
 
 });
