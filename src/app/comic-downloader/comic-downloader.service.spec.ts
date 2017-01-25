@@ -44,6 +44,18 @@ describe('ComicDownloaderService', () => {
       });
       service.readSettings();
     });
+
+    it('should call handleReadSettingError when read settings fail', () => {
+      spyOn(service, 'handleReadSettingError');
+      spyOn(service, 'getConfigFilePath').and.returnValue('/dev/null');
+      
+      spyOn(fs, 'readFile').and.callFake((path, callback) => {
+        callback('error', null);
+      });
+      
+      service.readSettings();
+      expect(service.handleReadSettingError).toHaveBeenCalled();
+    });
   });
 
   describe('when read settings got error', () => {

@@ -14,7 +14,11 @@ export class ComicDownloaderService {
   }
 
   readSettings() {
-    fs.readFile(this.getConfigFilePath(), function (err, result) {
+    let configPath = this.getConfigFilePath();
+    fs.readFile(configPath, (err, result) => {
+      if(err){
+        this.handleReadSettingError(err);
+      }
     });
   }
 
