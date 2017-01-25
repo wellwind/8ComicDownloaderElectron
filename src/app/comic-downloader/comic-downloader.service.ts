@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { mkdirp } from 'mkdirp';
 
 const os = window.require('os');
 const fs = window.require('fs');
 const path = window.require('path');
+const mkdirp = require('mkdirp');
 
 @Injectable()
 export class ComicDownloaderService {
@@ -29,7 +29,7 @@ export class ComicDownloaderService {
 
   handleReadSettingError(err) {
     if (err.toString().indexOf('no such file or directory') >= 0) {
-      mkdirp.call(path.dirname(this.getConfigFilePath()));
+      mkdirp.call(this, path.dirname(this.getConfigFilePath()), { fs: fs });
 
       let settings = {
         'comicFolder': path.dirname(this.getConfigFilePath()),

@@ -5,7 +5,7 @@ import { ElectronService } from './../shared/services/electron.service';
 
 const os = window.require('os');
 const fs = window.require('fs');
-const mkdirp = window.require('mkdirp');
+const mkdirp = require('mkdirp');
 
 describe('ComicDownloaderService', () => {
 
@@ -67,8 +67,6 @@ describe('ComicDownloaderService', () => {
       })
 
       service.readSettings();
-
-      
     });
   });
 
@@ -83,7 +81,7 @@ describe('ComicDownloaderService', () => {
 
       service.handleReadSettingError(errMsg);
 
-      expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
+      expect(mkdirp.call).toHaveBeenCalledWith(service, '/foo/bar/8ComicDownloader', { fs: fs });
     });
 
     it('should write default file when config fie not exist', () => {
