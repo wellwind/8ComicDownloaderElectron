@@ -25,46 +25,52 @@ describe('ComicDownloaderService', () => {
     expect(service.getConfigFilePath()).toBe('/foo/bar/8ComicDownloader/settings.conf');
   }));
 
-  it('should call fs.readFile when calling readSettings', done => {
-    const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
-    spyOn(fs, 'readFile').and.callFake((err, result) => {
-      expect(fs.readFile).toHaveBeenCalled();
-      done();
+  describe('when read settings', () => {
+    it('should call fs.readFile when calling readSettings', done => {
+      const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
+      spyOn(fs, 'readFile').and.callFake((err, result) => {
+        expect(fs.readFile).toHaveBeenCalled();
+        done();
+      });
+      service.readSettings();
     });
-    service.readSettings();
-  });
 
-  it('should call getConfigFilePath when calling readSettings', done => {
-    const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
-    spyOn(service, 'getConfigFilePath');
-    spyOn(fs, 'readFile').and.callFake((err, result) => {
-      expect(service.getConfigFilePath).toHaveBeenCalled();
-      done();
+    it('should call getConfigFilePath when calling readSettings', done => {
+      const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
+      spyOn(service, 'getConfigFilePath');
+      spyOn(fs, 'readFile').and.callFake((err, result) => {
+        expect(service.getConfigFilePath).toHaveBeenCalled();
+        done();
+      });
+      service.readSettings();
     });
-    service.readSettings();
   });
 
-  it('should create directory when config file not exist', () => {
-    const errMsg = 'ENOENT: no such file or directory';
-    spyOn(mkdirp, 'call');
-    spyOn(fs, 'writeFile');
+  describe('when read settings got error', () => {
+    beforeEach(() => {
+      spyOn(mkdirp, 'call');
+      spyOn(fs, 'writeFile');
+    });
 
-    service.handleReadSettingError(errMsg);
+    it('should create directory when config file not exist', () => {
+      const errMsg = 'ENOENT: no such file or directory';
 
-    expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
+      service.handleReadSettingError(errMsg);
+
+      expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
+    });
+
+    it('shoulde write default file when config fie not exist', () => {
+      const errMsg = 'ENOENT: no such file or directory';
+      let defaultSettings = {
+        'comicFolder': '/foo/bar/8ComicDownloader',
+        'comicList': []
+      };
+
+      service.handleReadSettingError(errMsg);
+
+      expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/8ComicDownloader/settings.conf', JSON.stringify(defaultSettings));
+    });
   });
 
-  it('shoulde write default file when config fie not exist', () => {
-    const errMsg = 'ENOENT: no such file or directory';
-    let defaultSettings = {
-      'comicFolder': '/foo/bar/8ComicDownloader',
-      'comicList': []
-    };
-    spyOn(mkdirp, 'call');
-    spyOn(fs, 'writeFile');
-
-    service.handleReadSettingError(errMsg);
-
-    expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/8ComicDownloader/settings.conf', JSON.stringify(defaultSettings));
-  });
 });
