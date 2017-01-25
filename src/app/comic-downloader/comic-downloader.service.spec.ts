@@ -45,11 +45,26 @@ describe('ComicDownloaderService', () => {
   });
 
   it('should create directory when config file not exist', () => {
-    const errMsg = 'no such file or directory';
+    const errMsg = 'ENOENT: no such file or directory';
     spyOn(mkdirp, 'call');
-    
+    spyOn(fs, 'writeFile');
+
     service.handleReadSettingError(errMsg);
 
     expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
+  });
+
+  it('shoulde write default file when config fie not exist', () => {
+    const errMsg = 'ENOENT: no such file or directory';
+    let defaultSettings = {
+      'comicFolder': '/foo/bar/8ComicDownloader',
+      'comicList': []
+    };
+    spyOn(mkdirp, 'call');
+    spyOn(fs, 'writeFile');
+
+    service.handleReadSettingError(errMsg);
+
+    expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/8ComicDownloader/settings.conf', JSON.stringify(defaultSettings));
   });
 });
