@@ -7,6 +7,9 @@ const path = window.require('path');
 
 @Injectable()
 export class ComicDownloaderService {
+
+  appSettings: any;
+
   constructor() { }
 
   getConfigFilePath() {
@@ -18,6 +21,8 @@ export class ComicDownloaderService {
     fs.readFile(configPath, (err, result) => {
       if (err) {
         this.handleReadSettingError(err);
+      } else {
+        this.appSettings = JSON.parse(result.toString());
       }
     });
   }

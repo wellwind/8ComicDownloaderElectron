@@ -54,6 +54,22 @@ describe('ComicDownloaderService', () => {
       service.readSettings();
       expect(service.handleReadSettingError).toHaveBeenCalled();
     });
+
+    it('should load settings to variable', done => {
+      var fakeSetting = {
+        foo: 'bar'
+      };
+
+      spyOn(fs, 'readFile').and.callFake((path, callback) => {
+        callback(null, new Buffer(JSON.stringify(fakeSetting)));
+        expect(JSON.stringify(service.appSettings)).toBe(JSON.stringify(fakeSetting));
+        done();
+      })
+
+      service.readSettings();
+
+      
+    });
   });
 
   describe('when read settings got error', () => {
@@ -70,7 +86,7 @@ describe('ComicDownloaderService', () => {
       expect(mkdirp.call).toHaveBeenCalledWith('/foo/bar/8ComicDownloader');
     });
 
-    it('shoulde write default file when config fie not exist', () => {
+    it('should write default file when config fie not exist', () => {
       const errMsg = 'ENOENT: no such file or directory';
       let defaultSettings = {
         'comicFolder': '/foo/bar/8ComicDownloader',
