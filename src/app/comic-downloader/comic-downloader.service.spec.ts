@@ -26,17 +26,15 @@ describe('ComicDownloaderService', () => {
   }));
 
   describe('when read settings', () => {
-    it('should call fs.readFile when calling readSettings', done => {
-      const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
-      spyOn(fs, 'readFile').and.callFake((err, result) => {
-        expect(fs.readFile).toHaveBeenCalled();
-        done();
-      });
+    it('should call fs.readFile when calling readSettings', () => {
+      spyOn(fs, 'readFile');
+
       service.readSettings();
+
+      expect(fs.readFile).toHaveBeenCalled();
     });
 
     it('should call getConfigFilePath when calling readSettings', done => {
-      const service = TestBed.get(ComicDownloaderService) as ComicDownloaderService;
       spyOn(service, 'getConfigFilePath');
       spyOn(fs, 'readFile').and.callFake((err, result) => {
         expect(service.getConfigFilePath).toHaveBeenCalled();
@@ -48,11 +46,11 @@ describe('ComicDownloaderService', () => {
     it('should call handleReadSettingError when read settings fail', () => {
       spyOn(service, 'handleReadSettingError');
       spyOn(service, 'getConfigFilePath').and.returnValue('/dev/null');
-      
+
       spyOn(fs, 'readFile').and.callFake((path, callback) => {
         callback('error', null);
       });
-      
+
       service.readSettings();
       expect(service.handleReadSettingError).toHaveBeenCalled();
     });
