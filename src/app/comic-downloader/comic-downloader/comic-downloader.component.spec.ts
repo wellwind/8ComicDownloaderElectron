@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComicDownloaderService } from './../comic-downloader.service';
 
-describe('IndexComponent', () => {
+describe('ComicDownloaderComponent', () => {
   let component: ComicDownloaderComponent;
   let fixture: ComponentFixture<ComicDownloaderComponent>;
 
