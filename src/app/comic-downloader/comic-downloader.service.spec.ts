@@ -1,11 +1,11 @@
-import { ElectronService } from './../shared/services/electron.service';
 /* tslint:disable:no-unused-variable */
-
 import { TestBed, async, inject } from '@angular/core/testing';
 import { ComicDownloaderService } from './comic-downloader.service';
+import { ElectronService } from './../shared/services/electron.service';
+
 const os = window.require('os');
 const fs = window.require('fs');
-import { mkdirp } from 'mkdirp';
+const mkdirp = window.require('mkdirp');
 
 describe('ComicDownloaderService', () => {
 

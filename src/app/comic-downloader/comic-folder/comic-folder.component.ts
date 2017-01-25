@@ -1,3 +1,5 @@
+import { ElectronService } from './../../shared/services/electron.service';
+import { ComicDownloaderService } from './../comic-downloader.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComicFolderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
   }
 
+  getComicFolder() {
+    return this.service.appSettings.comicFolder;
+  }
 }
