@@ -16,13 +16,19 @@ export class ComicDownloaderService {
     return os.homedir() + '/8ComicDownloader/settings.conf';;
   }
 
-  readSettings() {
+  readSettings(callback?) {
     let configPath = this.getConfigFilePath();
     fs.readFile(configPath, (err, result) => {
+      let tmpResult = result;
       if (err) {
-        this.handleReadSettingError(err);
-      } else {
-        this.appSettings = JSON.parse(result.toString());
+        tmpResult = this.handleReadSettingError(err);
+      }
+
+      if (tmpResult !== undefined) {
+        this.appSettings = JSON.parse(tmpResult.toString());
+        if (typeof callback === 'function') {
+          callback();
+        }
       }
     });
   }
@@ -35,7 +41,9 @@ export class ComicDownloaderService {
         'comicFolder': path.dirname(this.getConfigFilePath()),
         'comicList': []
       };
-      fs.writeFile(this.getConfigFilePath(), JSON.stringify(settings));
+      var writeResult = JSON.stringify(settings);
+      fs.writeFile(this.getConfigFilePath(), writeResult);
+      return new Buffer(writeResult);
     } else {
       throw err;
     }

@@ -43,7 +43,7 @@ describe('ComicDownloaderService', () => {
       service.readSettings();
     });
 
-    it('should call handleReadSettingError when read settings fail', () => {
+    it('should call handleReadSettingError if read settings fail', () => {
       spyOn(service, 'handleReadSettingError');
       spyOn(service, 'getConfigFilePath').and.returnValue('/dev/null');
 
@@ -67,6 +67,16 @@ describe('ComicDownloaderService', () => {
       })
 
       service.readSettings();
+    });
+
+    it('should call a callback after success', () => {
+      const expectCallBack = jasmine.createSpyObj('expectedCallBack', ['callback']);
+      spyOn(fs, 'readFile').and.callFake((path, callback) => {
+        callback(null, new Buffer(JSON.stringify({})));
+        expect(expectCallBack.callback).toHaveBeenCalled();
+      })
+
+      service.readSettings(expectCallBack.callback);
     });
   });
 
