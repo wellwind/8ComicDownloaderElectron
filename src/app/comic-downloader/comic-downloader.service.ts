@@ -11,7 +11,6 @@ export class ComicDownloaderService {
 
   appSettings: any;
 
-  constructor() { }
   constructor(private electronService: ElectronService) { }
 
   getConfigFilePath() {
@@ -64,10 +63,10 @@ export class ComicDownloaderService {
   }
 
   setComicFolder() {
-
+    this.electronService.openDirectoryDialog(this.appSettings.comicFolder);
   }
 
   openComicFolder() {
-    
+
   }
 }

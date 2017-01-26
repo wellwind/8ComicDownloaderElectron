@@ -14,4 +14,7 @@ export class ElectronService {
   getAppVersion() {
     return (this.electronApp as Electron.ElectronMainAndRenderer).remote.app.getVersion();
   }
+
+  openDirectoryDialog(defaultPath?, ) {
+  }
 }
