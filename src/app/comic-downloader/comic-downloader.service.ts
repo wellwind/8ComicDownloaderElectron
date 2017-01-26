@@ -74,6 +74,6 @@ export class ComicDownloaderService {
   }
 
   openComicFolder() {
-
+    this.electronService.openDirectory(this.appSettings.comicFolder);
   }
 }

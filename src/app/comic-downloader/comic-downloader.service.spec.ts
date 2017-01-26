@@ -195,4 +195,14 @@ describe('ComicDownloaderService', () => {
       expect(fs.writeFile).toHaveBeenCalledTimes(0);
     }));
   });
+
+  it('should call electronService.openDirectory() in service.openComicFolder()', () => {
+    spyOn(electronService, 'openDirectory');
+    service.appSettings = {
+      comicFolder: '/foo/bar'
+    };
+    service.openComicFolder();
+
+    expect(electronService.openDirectory).toHaveBeenCalledWith('/foo/bar');
+  })
 });

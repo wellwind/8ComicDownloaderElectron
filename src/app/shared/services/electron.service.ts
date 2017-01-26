@@ -31,4 +31,7 @@ export class ElectronService {
       });
     });
   }
+
+  openDirectory(directoryPath){
+  }
 }
