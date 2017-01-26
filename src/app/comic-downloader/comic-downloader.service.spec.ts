@@ -86,7 +86,6 @@ describe('ComicDownloaderService', () => {
 
       service.readSettingsPromise().then((result) => {
         expect(service.readSettings).toHaveBeenCalled();
-        expect(result).toBe(result);
         done();
       });
     });

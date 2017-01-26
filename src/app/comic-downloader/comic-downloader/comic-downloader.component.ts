@@ -8,12 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comic-downloader.component.css']
 })
 export class ComicDownloaderComponent implements OnInit {
-
+  appSettings: any;
   constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
-    this.service.readSettingsPromise().then((appSettings) => {      
+    this.service.readSettingsPromise().then(() => {
+      this.appSettings = this.service.appSettings;
     });
   }
-
 }
