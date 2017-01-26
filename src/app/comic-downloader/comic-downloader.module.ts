@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ComicDownloaderComponent } from './comic-downloader/comic-downloader.component';
 import { ComicFolderComponent } from './comic-folder/comic-folder.component';
 import { ComicListComponent } from './comic-list/comic-list.component';
+import { ComicDownloadListComponent } from './comic-download-list/comic-download-list.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { ComicListComponent } from './comic-list/comic-list.component';
   providers: [
     ComicDownloaderService
   ],
-  declarations: [ComicDownloaderComponent, ComicFolderComponent, ComicListComponent],
+  declarations: [ComicDownloaderComponent, ComicFolderComponent, ComicListComponent, ComicDownloadListComponent],
   exports: [
     ComicDownloaderComponent
   ]
