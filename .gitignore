@@ -49,8 +49,10 @@ dist
 # release file
 release
 
-# package.json in src
+# prepared files in src
 src/package.json
+src/assets/jquery.min.js
+src/assets/bootstrap.min.js
 
 # Skip pack files
 8comic-downloader-electron*
@@ -58,3 +60,6 @@ app.asar
 
 # Mac OS
 .DS_Store
+
+# karma-electron
+.electron

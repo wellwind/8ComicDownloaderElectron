@@ -1,3 +1,5 @@
+import { ElectronService } from './../../shared/services/electron.service';
+import { ComicDownloaderService } from './../comic-downloader.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comic-downloader.component.css']
 })
 export class ComicDownloaderComponent implements OnInit {
-
-  constructor() { }
+  appSettings: any;
+  constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
+    this.service.readSettingsPromise().then(() => {
+      this.appSettings = this.service.appSettings;
+    });
   }
-
 }

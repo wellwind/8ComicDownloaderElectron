@@ -14,4 +14,25 @@ export class ElectronService {
   getAppVersion() {
     return (this.electronApp as Electron.ElectronMainAndRenderer).remote.app.getVersion();
   }
+
+  openDirectoryDialog(defaultPath?, ) {
+    const dialog = (this.electronApp as Electron.ElectronMainAndRenderer).remote.dialog;
+    const openOptions: any = {
+      defaultPath: defaultPath || '',
+      properties: ["openDirectory"]
+    };
+    return new Promise((resolve, reject) => {
+      dialog.showOpenDialog(openOptions, (directoryPath) => {
+        if (directoryPath) {
+          resolve(directoryPath[0]);
+        } else {
+          resolve(undefined);
+        }
+      });
+    });
+  }
+
+  openDirectory(directoryPath){
+    (this.electronApp as Electron.ElectronMainAndRenderer).remote.shell.openExternal('file://' + directoryPath);
+  }
 }
