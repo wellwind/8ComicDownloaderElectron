@@ -1,3 +1,4 @@
+import { ElectronService } from './../shared/services/electron.service';
 import { Injectable } from '@angular/core';
 
 const os = window.require('os');
@@ -11,6 +12,7 @@ export class ComicDownloaderService {
   appSettings: any;
 
   constructor() { }
+  constructor(private electronService: ElectronService) { }
 
   getConfigFilePath() {
     return os.homedir() + '/8ComicDownloader/settings.conf';;

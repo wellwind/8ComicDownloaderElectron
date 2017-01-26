@@ -16,6 +16,7 @@ describe('ComicDownloaderService', () => {
 
     TestBed.configureTestingModule({
       providers: [ComicDownloaderService]
+      providers: [ComicDownloaderService, ElectronService],
     });
 
     service = TestBed.get(ComicDownloaderService);
