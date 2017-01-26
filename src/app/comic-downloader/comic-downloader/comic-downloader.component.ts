@@ -12,7 +12,8 @@ export class ComicDownloaderComponent implements OnInit {
   constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
-    this.service.readSettings();
+    this.service.readSettingsPromise().then((appSettings) => {      
+    });
   }
 
 }

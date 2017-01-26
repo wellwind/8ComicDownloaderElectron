@@ -26,12 +26,11 @@ describe('ComicDownloaderComponent', () => {
     component = fixture.componentInstance;
 
     service = TestBed.get(ComicDownloaderService);
-    spyOn(service, 'readSettings');
-
     fixture.detectChanges();
   });
 
-  it('should call service.readSettings initially', () => {
-    expect(service.readSettings).toHaveBeenCalled();
+  it('should call service.readSettingsPromise() initially', () => {
+    spyOn(service, 'readSettingsPromise').and.returnValue({ then: () => { }, catch: () => { } });
+    expect(service.readSettingsPromise).toHaveBeenCalled();
   });
 });
