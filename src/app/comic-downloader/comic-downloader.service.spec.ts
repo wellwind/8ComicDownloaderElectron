@@ -163,13 +163,36 @@ describe('ComicDownloaderService', () => {
       service.appSettings = {
         comicFolder: '/foo/bar'
       };
-      
+
       spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
 
       service.setComicFolder();
       tick();
 
       expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
+    }));
+  });
+
+  describe('when cancel select save comic folder', () => {
+    beforeEach(() => {
+      spyOn(electronService, 'openDirectoryDialog').and.returnValue(new Promise((resolve, reject) => {
+        resolve(undefined);
+      }));
+      spyOn(fs, 'writeFile');
+    });
+
+    it('should not save new service.appSettings whne cancel selection', fakeAsync(() => {
+      service.appSettings = {
+        comicFolder: '/foo/bar'
+      };
+
+      spyOn(service, 'getConfigFilePath').and.returnValue(undefined);
+
+      service.setComicFolder();
+      tick();
+
+      expect(service.appSettings.comicFolder).toBe('/foo/bar');
+      expect(fs.writeFile).toHaveBeenCalledTimes(0);
     }));
   });
 });
