@@ -77,7 +77,26 @@ export class ComicDownloaderService {
     this.electronService.openDirectory(this.appSettings.comicFolder);
   }
 
-  addComicUrl(url) {
-    
+  addComicUrl(comicUrl) {
+    this.checkComicUrlValid(comicUrl)
+      .then((comicData: any) => {
+        this.updateComicToAppSettings(comicData);
+        fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+      });
+  }
+
+  updateComicToAppSettings(comicData) {
+    let existComic = this.appSettings.comicList.filter((currentComic) => currentComic.url === comicData.url);
+    if (existComic.length > 0) {
+      existComic[0].name = comicData.name;
+    } else {
+      this.appSettings.comicList.push(comicData);
+    }
+  }
+
+  checkComicUrlValid(comicUrl) {
+    return new Promise((resolve, reject) => {
+
+    });
   }
 }

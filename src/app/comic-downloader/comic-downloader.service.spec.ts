@@ -204,5 +204,84 @@ describe('ComicDownloaderService', () => {
     service.openComicFolder();
 
     expect(electronService.openDirectory).toHaveBeenCalledWith('/foo/bar');
-  })
+  });
+
+  describe('add comic url', () => {
+    beforeEach(() => {
+      spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
+      spyOn(fs, 'writeFile');
+    });
+
+    it('should check url is valid', () => {
+      spyOn(service, 'checkComicUrlValid').and.returnValue({ then: () => { }, reject: () => { } });
+
+      service.addComicUrl('foo');
+
+      expect(service.checkComicUrlValid).toHaveBeenCalledWith('foo');
+    });
+
+    it('should add url to appSettings', fakeAsync(() => {
+      service.appSettings = {
+        comicList: []
+      };
+
+      var newComicData = {
+        name: 'comicName',
+        url: 'http://foo/bar'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('test url...');
+      tick();
+
+      expect(service.appSettings.comicList).toContain(newComicData);
+    }));
+
+    it('should update comic if exist', fakeAsync(() => {
+      service.appSettings = {
+        comicList: [
+          { name: 'comicName0', url: 'http://foo/bar/0' },
+          { name: 'comicNameCurrent', url: 'http://foo/bar/replace' },
+          { name: 'comicName1', url: 'http://foo/bar/1' },
+        ]
+      };
+
+      var newComicData = {
+        name: 'comicNameNew',
+        url: 'http://foo/bar/replace'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('http://foo/bar/');
+      tick();
+
+      expect(service.appSettings.comicList[1]).toEqual(newComicData);
+    }));
+
+    it('should save new appSettings after add comic url', fakeAsync(() => {
+      service.appSettings = {
+        comicList: []
+      };
+
+      var newComicData = {
+        name: 'comicName',
+        url: 'http://foo/bar'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('test url...');
+      tick();
+
+      expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
+    }));
+  });
 });
