@@ -62,6 +62,10 @@ export class ComicDownloaderService {
   }
 
   setComicFolder() {
+
+  }
+
+  openComicFolder() {
     
   }
 }

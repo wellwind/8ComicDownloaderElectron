@@ -19,4 +19,8 @@ export class ComicFolderComponent implements OnInit {
   setComicFolder() {
     this.service.setComicFolder();
   }
+
+  openComicFolder() {
+    this.service.openComicFolder();
+  }
 }

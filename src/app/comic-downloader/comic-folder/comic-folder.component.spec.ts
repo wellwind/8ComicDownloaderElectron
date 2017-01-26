@@ -42,4 +42,12 @@ describe('ComicFolderComponent', () => {
 
     expect(service.setComicFolder).toHaveBeenCalled();
   });
+
+  it('should call service.openComicFolder() when click openComicFolder buttion', () => {
+    spyOn(service, 'openComicFolder');
+    let openComicFolder = fixture.debugElement.query(By.css('#openComicFolder'));
+    openComicFolder.triggerEventHandler('click', openComicFolder.nativeElement);
+
+    expect(service.openComicFolder).toHaveBeenCalled();
+  });
 });
