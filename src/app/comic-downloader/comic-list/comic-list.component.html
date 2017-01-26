@@ -14,10 +14,10 @@
     </a>
   </div>
   <div class="col-xs-12 col-md-5" style="margin-top: 5px;">
-<input type="text" id="addComicUrl" value="" class="form-control" placeholder="請輸入漫畫網址..." />
+<input type="text" id="addComicUrl" value="" class="form-control" placeholder="請輸入漫畫網址..." [(ngModel)]="urlToAdd" />
 </div>
 <div class="col-xs-12 col-md-3" style="margin-top: 5px;">
-<a href="javascript: void(0);" class="btn btn-info btn-block" id="addComicUrlButton">
+<a href="javascript: void(0);" class="btn btn-info btn-block" id="addComicUrlButton" (click)="addComicUrl()">
   <i class="fa fa-fw fa-plus"></i> 加入漫畫網址
 </a>
 </div>

@@ -1,3 +1,4 @@
+import { ComicDownloaderService } from './../comic-downloader.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComicListComponent implements OnInit {
 
-  constructor() { }
+  urlToAdd;
+
+  constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
+  }
+
+  addComicUrl() {
+    if (this.urlToAdd) {
+      this.service.addComicUrl(this.urlToAdd);
+    }
   }
 
 }

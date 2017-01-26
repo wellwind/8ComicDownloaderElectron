@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { ComicDownloaderService } from './comic-downloader.service';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -10,7 +11,8 @@ import { ComicDownloadListComponent } from './comic-download-list/comic-download
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ],
   providers: [
     ComicDownloaderService
