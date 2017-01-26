@@ -11,16 +11,9 @@ describe('ComicFolderComponent', () => {
   let service: ComicDownloaderService;
 
   beforeEach(async(() => {
-    let comicDownloaderStub = {
-      appSettings: {
-        comicFolder: '/foo/bar'
-      }
-    }
     TestBed.configureTestingModule({
       declarations: [ComicFolderComponent],
-      providers: [
-        { provide: ComicDownloaderService, useValue: comicDownloaderStub }
-      ]
+      providers: [ComicDownloaderService]
     })
       .compileComponents();
   }));
@@ -40,5 +33,13 @@ describe('ComicFolderComponent', () => {
     fixture.detectChanges();
     let saveComicFolder = fixture.debugElement.query(By.css('#saveComicFolder')).nativeElement as HTMLElement;
     expect(saveComicFolder.textContent).toBe('/foo/bar');
+  });
+
+  it('should call service.setComicFolder() when click setComicFolder button', () => {
+    spyOn(service, 'setComicFolder');
+    let setComicFolder = fixture.debugElement.query(By.css('#setComicFolder'));
+    setComicFolder.triggerEventHandler('click', setComicFolder.nativeElement);
+
+    expect(service.setComicFolder).toHaveBeenCalled();
   });
 });

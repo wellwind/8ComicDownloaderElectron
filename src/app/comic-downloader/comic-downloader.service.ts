@@ -60,4 +60,8 @@ export class ComicDownloaderService {
       throw err;
     }
   }
+
+  setComicFolder() {
+    
+  }
 }
