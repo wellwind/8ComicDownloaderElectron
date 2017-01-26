@@ -33,7 +33,11 @@ describe('ComicFolderComponent', () => {
     service = TestBed.get(ComicDownloaderService);
   });
 
-  it('should get comic folder in setting file', () => {
+  it('should display save comic folder', () => {
+    component.appSettings = {
+      comicFolder: '/foo/bar'
+    };
+    fixture.detectChanges();
     let saveComicFolder = fixture.debugElement.query(By.css('#saveComicFolder')).nativeElement as HTMLElement;
     expect(saveComicFolder.textContent).toBe('/foo/bar');
   });
