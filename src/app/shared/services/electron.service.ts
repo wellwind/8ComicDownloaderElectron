@@ -21,7 +21,6 @@ export class ElectronService {
       defaultPath: defaultPath,
       properties: ["openDirectory"]
     };
-
     return new Promise((resolve, reject) => {
       dialog.showOpenDialog(openOptions, (directoryPath) => {
         resolve(directoryPath);

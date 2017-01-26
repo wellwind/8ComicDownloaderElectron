@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick, inject } from '@angular/core/testing';
 import { ElectronService } from './electron.service';
 
 describe('ElectronService', () => {
@@ -37,6 +37,7 @@ describe('ElectronService', () => {
         defaultPath: '/foo/bar',
         properties: ["openDirectory"]
       };
+
       service.electronApp = {
         remote: {
           dialog: {
@@ -45,9 +46,26 @@ describe('ElectronService', () => {
             }
           }
         }
-      }
+      };
 
       service.openDirectoryDialog('/foo/bar');
+    });
+
+    it('should resolve selected path', done => {
+      service.electronApp = {
+        remote: {
+          dialog: {
+            showOpenDialog: (opt, cb) => {
+              cb('/foo/bar/new');
+            }
+          }
+        }
+      };
+
+      service.openDirectoryDialog('').then(selectedPath => {
+        expect(selectedPath).toBe('/foo/bar/new');
+        done();
+      });
     });
   })
 
