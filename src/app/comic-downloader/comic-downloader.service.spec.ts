@@ -78,6 +78,18 @@ describe('ComicDownloaderService', () => {
 
       service.readSettings(expectCallBack.callback);
     });
+
+    it('should have a promise version', done => {
+      spyOn(service, 'readSettings').and.callFake((callback) => {
+        callback();
+      });
+
+      service.readSettingsPromise().then((result) => {
+        expect(service.readSettings).toHaveBeenCalled();
+        expect(result).toBe(result);
+        done();
+      });
+    });
   });
 
   describe('when read settings got error', () => {

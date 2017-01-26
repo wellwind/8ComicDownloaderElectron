@@ -33,6 +33,18 @@ export class ComicDownloaderService {
     });
   }
 
+  readSettingsPromise() {
+    return new Promise((resolve, reject) => {
+      try {
+        this.readSettings(() => {
+          resolve(this.appSettings);
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   handleReadSettingError(err) {
     if (err.toString().indexOf('no such file or directory') >= 0) {
       mkdirp.call(this, path.dirname(this.getConfigFilePath()), { fs: fs });
