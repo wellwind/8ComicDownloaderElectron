@@ -23,7 +23,11 @@ export class ElectronService {
     };
     return new Promise((resolve, reject) => {
       dialog.showOpenDialog(openOptions, (directoryPath) => {
-        resolve(directoryPath[0]);
+        if (directoryPath) {
+          resolve(directoryPath[0]);
+        } else {
+          resolve(undefined);
+        }
       });
     });
   }

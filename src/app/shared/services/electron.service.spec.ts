@@ -67,6 +67,22 @@ describe('ElectronService', () => {
         done();
       });
     });
-  })
 
+    it('should resolve undefined if cancel selection', done => {
+      service.electronApp = {
+        remote: {
+          dialog: {
+            showOpenDialog: (opt, cb) => {
+              cb(undefined);
+            }
+          }
+        }
+      };
+
+      service.openDirectoryDialog('').then(selectedPath => {
+        expect(selectedPath).toBe(undefined);
+        done();
+      });
+    });
+  });
 });
