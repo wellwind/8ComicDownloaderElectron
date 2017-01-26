@@ -1,4 +1,3 @@
-import { AppModule } from './../../app.module';
 /* tslint:disable:no-unused-variable */
 import { ComicDownloaderComponent } from './comic-downloader.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -26,11 +25,11 @@ describe('ComicDownloaderComponent', () => {
     component = fixture.componentInstance;
 
     service = TestBed.get(ComicDownloaderService);
+    spyOn(service, 'readSettingsPromise').and.returnValue({ then: () => { }, catch: () => { } });
     fixture.detectChanges();
   });
 
   it('should call service.readSettingsPromise() initially', () => {
-    spyOn(service, 'readSettingsPromise').and.returnValue({ then: () => { }, catch: () => { } });
     expect(service.readSettingsPromise).toHaveBeenCalled();
   });
 });
