@@ -16,5 +16,8 @@ export class ElectronService {
   }
 
   openDirectoryDialog(defaultPath?, ) {
+    return new Promise((resolve, callback) => {
+
+    });
   }
 }

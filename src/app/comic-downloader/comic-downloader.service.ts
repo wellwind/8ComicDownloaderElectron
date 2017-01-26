@@ -63,7 +63,11 @@ export class ComicDownloaderService {
   }
 
   setComicFolder() {
-    this.electronService.openDirectoryDialog(this.appSettings.comicFolder);
+    this.electronService
+      .openDirectoryDialog(this.appSettings.comicFolder)
+      .then((newComicFolder) => {
+        this.appSettings.comicFolder = newComicFolder;
+      });
   }
 
   openComicFolder() {

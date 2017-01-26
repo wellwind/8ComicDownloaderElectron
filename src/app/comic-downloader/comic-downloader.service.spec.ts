@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick, inject } from '@angular/core/testing';
 import { ComicDownloaderService } from './comic-downloader.service';
 import { ElectronService } from './../shared/services/electron.service';
 
@@ -10,16 +10,18 @@ const mkdirp = require('mkdirp');
 describe('ComicDownloaderService', () => {
 
   let service: ComicDownloaderService;
+  let electronService: ElectronService;
 
   beforeEach(() => {
     spyOn(os, 'homedir').and.returnValue('/foo/bar');
 
     TestBed.configureTestingModule({
-      providers: [ComicDownloaderService]
       providers: [ComicDownloaderService, ElectronService],
+
     });
 
     service = TestBed.get(ComicDownloaderService);
+    electronService = TestBed.get(ElectronService);
   });
 
   it('should have basic settings file path', inject([ComicDownloaderService], (service: ComicDownloaderService) => {
@@ -128,4 +130,32 @@ describe('ComicDownloaderService', () => {
     });
   });
 
+  describe('when save comic folder setting', () => {
+    beforeEach(() => {
+      spyOn(electronService, 'openDirectoryDialog').and.returnValue(new Promise((resolve, reject) => {
+        resolve('/foo/bar/new');
+      }));
+    });
+
+    it('should call ElectronService.showOpenDialog()', () => {
+      service.appSettings = {
+        comicFolder: '/foo/bar'
+      };
+
+      service.setComicFolder();
+
+      expect(electronService.openDirectoryDialog).toHaveBeenCalledWith('/foo/bar');
+    });
+
+    it('should reset service.appSettings after select directory', fakeAsync(() => {
+      service.appSettings = {
+        comicFolder: '/foo/bar'
+      };
+
+      service.setComicFolder();
+      tick();
+
+      expect(service.appSettings.comicFolder).toBe('/foo/bar/new');
+    }));
+  });
 });
