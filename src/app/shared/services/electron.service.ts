@@ -33,5 +33,6 @@ export class ElectronService {
   }
 
   openDirectory(directoryPath){
+    (this.electronApp as Electron.ElectronMainAndRenderer).remote.shell.openExternal('file://' + directoryPath);
   }
 }

@@ -28,10 +28,6 @@ describe('ElectronService', () => {
   });
 
   describe('openDirectoryDialog()', () => {
-    beforeEach(() => {
-
-    });
-
     it('should call remote.dialog.showOpenDialog()', () => {
       const openOptions: any = {
         defaultPath: '/foo/bar',
@@ -84,5 +80,17 @@ describe('ElectronService', () => {
         done();
       });
     });
+  });
+
+  it('should call emote.shell.openExternal', () => {
+    service.electronApp = {
+      remote: {
+        shell: jasmine.createSpyObj('shell', ['openExternal'])
+      }
+    }
+
+    service.openDirectory('/foo/bar');
+
+    expect(service.electronApp.remote.shell.openExternal).toHaveBeenCalledWith('file:///foo/bar');
   });
 });
