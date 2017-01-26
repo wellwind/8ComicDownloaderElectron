@@ -22,8 +22,10 @@ export class ElectronService {
       properties: ["openDirectory"]
     };
 
-    return new Promise((resolve, callback) => {
-      dialog.showOpenDialog(openOptions);
+    return new Promise((resolve, reject) => {
+      dialog.showOpenDialog(openOptions, (directoryPath) => {
+        resolve(directoryPath);
+      });
     });
   }
 }

@@ -29,11 +29,7 @@ describe('ElectronService', () => {
 
   describe('openDirectoryDialog()', () => {
     beforeEach(() => {
-      service.electronApp = {
-        remote: {
-          dialog: jasmine.createSpyObj('dialog', ['showOpenDialog'])
-        }
-      }
+
     });
 
     it('should call remote.dialog.showOpenDialog()', () => {
@@ -41,10 +37,17 @@ describe('ElectronService', () => {
         defaultPath: '/foo/bar',
         properties: ["openDirectory"]
       };
+      service.electronApp = {
+        remote: {
+          dialog: {
+            showOpenDialog: (opt, cb) => {
+              expect(opt).toEqual(openOptions);
+            }
+          }
+        }
+      }
+
       service.openDirectoryDialog('/foo/bar');
-
-
-      expect(service.electronApp.remote.dialog.showOpenDialog).toHaveBeenCalledWith(openOptions);
     });
   })
 
