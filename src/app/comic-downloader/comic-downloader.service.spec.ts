@@ -135,6 +135,7 @@ describe('ComicDownloaderService', () => {
       spyOn(electronService, 'openDirectoryDialog').and.returnValue(new Promise((resolve, reject) => {
         resolve('/foo/bar/new');
       }));
+      spyOn(fs, 'writeFile');
     });
 
     it('should call ElectronService.showOpenDialog()', () => {
@@ -156,6 +157,19 @@ describe('ComicDownloaderService', () => {
       tick();
 
       expect(service.appSettings.comicFolder).toBe('/foo/bar/new');
+    }));
+
+    it('should save new service.appSettings', fakeAsync(() => {
+      service.appSettings = {
+        comicFolder: '/foo/bar'
+      };
+      
+      spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
+
+      service.setComicFolder();
+      tick();
+
+      expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
     }));
   });
 });
