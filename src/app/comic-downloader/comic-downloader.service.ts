@@ -1,3 +1,4 @@
+import { ElectronService } from './../shared/services/electron.service';
 import { Injectable } from '@angular/core';
 
 const os = window.require('os');
@@ -10,7 +11,7 @@ export class ComicDownloaderService {
 
   appSettings: any;
 
-  constructor() { }
+  constructor(private electronService: ElectronService) { }
 
   getConfigFilePath() {
     return os.homedir() + '/8ComicDownloader/settings.conf';;
@@ -62,10 +63,17 @@ export class ComicDownloaderService {
   }
 
   setComicFolder() {
-
+    this.electronService
+      .openDirectoryDialog(this.appSettings.comicFolder)
+      .then((newComicFolder) => {
+        if (newComicFolder) {
+          this.appSettings.comicFolder = newComicFolder;
+          fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+        }
+      });
   }
 
   openComicFolder() {
-    
+    this.electronService.openDirectory(this.appSettings.comicFolder);
   }
 }

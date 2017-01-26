@@ -1,3 +1,4 @@
+import { ElectronService } from './../../shared/services/electron.service';
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -13,7 +14,7 @@ describe('ComicFolderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicFolderComponent],
-      providers: [ComicDownloaderService]
+      providers: [ComicDownloaderService, ElectronService]
     })
       .compileComponents();
   }));

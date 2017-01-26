@@ -1,3 +1,4 @@
+import { ElectronService } from './../../shared/services/electron.service';
 /* tslint:disable:no-unused-variable */
 import { ComicDownloaderComponent } from './comic-downloader.component';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -14,7 +15,7 @@ describe('ComicDownloaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicDownloaderComponent],
-      providers: [ComicDownloaderService],
+      providers: [ComicDownloaderService, ElectronService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
