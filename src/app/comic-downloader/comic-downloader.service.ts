@@ -17,6 +17,10 @@ export class ComicDownloaderService {
     return os.homedir() + '/8ComicDownloader/settings.conf';;
   }
 
+  updateSettings() {
+    fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+  }
+
   readSettings(callback?) {
     let configPath = this.getConfigFilePath();
     fs.readFile(configPath, (err, result) => {
@@ -68,7 +72,7 @@ export class ComicDownloaderService {
       .then((newComicFolder) => {
         if (newComicFolder) {
           this.appSettings.comicFolder = newComicFolder;
-          fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+          this.updateSettings();
         }
       });
   }
@@ -81,7 +85,7 @@ export class ComicDownloaderService {
     this.checkComicUrlValid(comicUrl)
       .then((comicData: any) => {
         this.updateComicToAppSettings(comicData);
-        fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+        this.updateSettings();
       });
   }
 

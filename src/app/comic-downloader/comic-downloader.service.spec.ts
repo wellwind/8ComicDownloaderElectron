@@ -24,9 +24,20 @@ describe('ComicDownloaderService', () => {
     electronService = TestBed.get(ElectronService);
   });
 
-  it('should have basic settings file path', inject([ComicDownloaderService], (service: ComicDownloaderService) => {
+  it('should have basic settings file path', () => {
     expect(service.getConfigFilePath()).toBe('/foo/bar/8ComicDownloader/settings.conf');
-  }));
+  });
+
+  it('sould save settings', () => {
+    service.appSettings = { foo: 'bar' };
+    spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
+    spyOn(fs, 'writeFile');
+
+    service.updateSettings();
+
+    expect(service.getConfigFilePath).toHaveBeenCalled();
+    expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
+  })
 
   describe('when read settings', () => {
     it('should call fs.readFile when calling readSettings', () => {
