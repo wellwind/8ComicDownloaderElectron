@@ -56,7 +56,7 @@ describe('ElectronService', () => {
         remote: {
           dialog: {
             showOpenDialog: (opt, cb) => {
-              cb('/foo/bar/new');
+              cb(['/foo/bar/new']);
             }
           }
         }

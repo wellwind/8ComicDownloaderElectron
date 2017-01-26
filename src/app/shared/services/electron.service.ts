@@ -18,12 +18,12 @@ export class ElectronService {
   openDirectoryDialog(defaultPath?, ) {
     const dialog = (this.electronApp as Electron.ElectronMainAndRenderer).remote.dialog;
     const openOptions: any = {
-      defaultPath: defaultPath,
+      defaultPath: defaultPath || '',
       properties: ["openDirectory"]
     };
     return new Promise((resolve, reject) => {
       dialog.showOpenDialog(openOptions, (directoryPath) => {
-        resolve(directoryPath);
+        resolve(directoryPath[0]);
       });
     });
   }
