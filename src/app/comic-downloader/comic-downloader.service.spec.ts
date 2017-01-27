@@ -6,6 +6,7 @@ import { ElectronService } from './../shared/services/electron.service';
 const os = window.require('os');
 const fs = window.require('fs');
 const mkdirp = require('mkdirp');
+const request = require('request');
 
 describe('ComicDownloaderService', () => {
 
@@ -315,4 +316,24 @@ describe('ComicDownloaderService', () => {
       expect(actual).toBe(expected);
     });
   });
+
+  describe('get url content', () => {
+    it('should do a right request', fakeAsync(() => {
+      let actualOpt, actualHtml
+      const requestOpts = {
+        url: 'http://foo/bar',
+        encoding: null,
+      };
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        actualOpt = opt;
+      });
+
+      service.getHtmlFromUrl('http://foo/bar');
+      tick();
+
+      expect(request.call).toHaveBeenCalled();
+      expect(actualOpt).toEqual(requestOpts);
+    }));
+  });
+
 });

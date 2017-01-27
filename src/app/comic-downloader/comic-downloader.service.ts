@@ -5,6 +5,7 @@ const os = window.require('os');
 const fs = window.require('fs');
 const path = window.require('path');
 const mkdirp = require('mkdirp');
+const request = require('request');
 
 @Injectable()
 export class ComicDownloaderService {
@@ -110,5 +111,16 @@ export class ComicDownloaderService {
     let splitExtName = splitDash[splitDash.length - 1].split('.html');
     let comicId = splitExtName[0];
     return "http://v.comicbus.com/online/comic-" + comicId + ".html?ch=1";
+  }
+
+  getHtmlFromUrl(targetUrl) {
+    return new Promise((resolve, reject) => {
+      var opt = {
+        url: targetUrl,
+        encoding: null
+      };
+      request.call(this, opt, (err, response, body) => {
+      });
+    });
   }
 }
