@@ -104,7 +104,7 @@ export class ComicDownloaderService {
     return new Promise((resolve, reject) => {
       let result = { name: '', url: '' };
       result.url = this.getCorrectComicUrl(comicUrl);
-      this.getComicName(comicUrl).then((comicName: string) => {
+      this.getComicName(result.url).then((comicName: string) => {
         result.name = comicName;
 
         resolve(result);
