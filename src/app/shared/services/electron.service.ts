@@ -15,11 +15,11 @@ export class ElectronService {
     return (this.electronApp as Electron.ElectronMainAndRenderer).remote.app.getVersion();
   }
 
-  openDirectoryDialog(defaultPath?, ) {
+  openDirectoryDialog(defaultPath?) {
     const dialog = (this.electronApp as Electron.ElectronMainAndRenderer).remote.dialog;
     const openOptions: any = {
       defaultPath: defaultPath || '',
-      properties: ["openDirectory"]
+      properties: ['openDirectory']
     };
     return new Promise((resolve, reject) => {
       dialog.showOpenDialog(openOptions, (directoryPath) => {
@@ -32,7 +32,7 @@ export class ElectronService {
     });
   }
 
-  openDirectory(directoryPath){
+  openDirectory(directoryPath) {
     (this.electronApp as Electron.ElectronMainAndRenderer).remote.shell.openExternal('file://' + directoryPath);
   }
 }

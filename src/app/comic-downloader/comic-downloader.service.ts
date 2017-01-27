@@ -16,7 +16,7 @@ export class ComicDownloaderService {
   constructor(private electronService: ElectronService) { }
 
   getConfigFilePath() {
-    return os.homedir() + '/8ComicDownloader/settings.conf';;
+    return os.homedir() + '/8ComicDownloader/settings.conf';
   }
 
   updateSettings() {
@@ -24,7 +24,7 @@ export class ComicDownloaderService {
   }
 
   readSettings(callback?) {
-    let configPath = this.getConfigFilePath();
+    const configPath = this.getConfigFilePath();
     fs.readFile(configPath, (err, result) => {
       let tmpResult = result;
       if (err) {
@@ -56,11 +56,11 @@ export class ComicDownloaderService {
     if (err.toString().indexOf('no such file or directory') >= 0) {
       mkdirp.call(this, path.dirname(this.getConfigFilePath()), { fs: fs });
 
-      let settings = {
+      const settings = {
         'comicFolder': path.dirname(this.getConfigFilePath()),
         'comicList': []
       };
-      var writeResult = JSON.stringify(settings);
+      const writeResult = JSON.stringify(settings);
       fs.writeFile(this.getConfigFilePath(), writeResult);
       return new Buffer(writeResult);
     } else {
@@ -92,7 +92,7 @@ export class ComicDownloaderService {
   }
 
   updateComicToAppSettings(comicData) {
-    let existComic = this.appSettings.comicList.filter((currentComic) => currentComic.url === comicData.url);
+    const existComic = this.appSettings.comicList.filter((currentComic) => currentComic.url === comicData.url);
     if (existComic.length > 0) {
       existComic[0].name = comicData.name;
     } else {
@@ -102,7 +102,7 @@ export class ComicDownloaderService {
 
   checkComicUrlValid(comicUrl: string) {
     return new Promise((resolve, reject) => {
-      let result = { name: '', url: '' };
+      const result = { name: '', url: '' };
       result.url = this.getCorrectComicUrl(comicUrl);
       this.getComicName(result.url).then((comicName: string) => {
         result.name = comicName;
@@ -113,11 +113,11 @@ export class ComicDownloaderService {
   }
 
   getCorrectComicUrl(comicUrl: string) {
-    let splitSlash = comicUrl.split('/');
-    let splitDash = splitSlash[splitSlash.length - 1].split('-');
-    let splitExtName = splitDash[splitDash.length - 1].split('.html');
-    let comicId = splitExtName[0];
-    return "http://v.comicbus.com/online/comic-" + comicId + ".html?ch=1";
+    const splitSlash = comicUrl.split('/');
+    const splitDash = splitSlash[splitSlash.length - 1].split('-');
+    const splitExtName = splitDash[splitDash.length - 1].split('.html');
+    const comicId = splitExtName[0];
+    return 'http://v.comicbus.com/online/comic-' + comicId + '.html?ch=1';
   }
 
   getComicName(comicUrl: string) {
@@ -131,12 +131,12 @@ export class ComicDownloaderService {
 
   getHtmlFromUrl(targetUrl) {
     return new Promise((resolve, reject) => {
-      var opt = {
+      const opt = {
         url: targetUrl,
         encoding: null
       };
       request.call(this, opt, (err, response, body) => {
-        var result = this.handleRequestResult(err, response, body);
+        const result = this.handleRequestResult(err, response, body);
         if (result) {
           resolve(result);
         } else if (err) {

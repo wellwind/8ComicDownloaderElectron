@@ -32,13 +32,13 @@ describe('ComicFolderComponent', () => {
       comicFolder: '/foo/bar'
     };
     fixture.detectChanges();
-    let saveComicFolder = fixture.debugElement.query(By.css('#saveComicFolder')).nativeElement as HTMLElement;
+    const saveComicFolder = fixture.debugElement.query(By.css('#saveComicFolder')).nativeElement as HTMLElement;
     expect(saveComicFolder.textContent).toBe('/foo/bar');
   });
 
   it('should call service.setComicFolder() when click setComicFolder button', () => {
     spyOn(service, 'setComicFolder');
-    let setComicFolder = fixture.debugElement.query(By.css('#setComicFolder'));
+    const setComicFolder = fixture.debugElement.query(By.css('#setComicFolder'));
     setComicFolder.triggerEventHandler('click', setComicFolder.nativeElement);
 
     expect(service.setComicFolder).toHaveBeenCalled();
@@ -46,7 +46,7 @@ describe('ComicFolderComponent', () => {
 
   it('should call service.openComicFolder() when click openComicFolder buttion', () => {
     spyOn(service, 'openComicFolder');
-    let openComicFolder = fixture.debugElement.query(By.css('#openComicFolder'));
+    const openComicFolder = fixture.debugElement.query(By.css('#openComicFolder'));
     openComicFolder.triggerEventHandler('click', openComicFolder.nativeElement);
 
     expect(service.openComicFolder).toHaveBeenCalled();

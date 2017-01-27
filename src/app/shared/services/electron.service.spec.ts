@@ -31,7 +31,7 @@ describe('ElectronService', () => {
     it('should call remote.dialog.showOpenDialog()', () => {
       const openOptions: any = {
         defaultPath: '/foo/bar',
-        properties: ["openDirectory"]
+        properties: ['openDirectory']
       };
 
       service.electronApp = {
@@ -87,7 +87,7 @@ describe('ElectronService', () => {
       remote: {
         shell: jasmine.createSpyObj('shell', ['openExternal'])
       }
-    }
+    };
 
     service.openDirectory('/foo/bar');
 

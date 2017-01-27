@@ -39,7 +39,7 @@ describe('ComicDownloaderService', () => {
 
     expect(service.getConfigFilePath).toHaveBeenCalled();
     expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
-  })
+  });
 
   describe('when read settings', () => {
     it('should call fs.readFile when calling readSettings', () => {
@@ -72,7 +72,7 @@ describe('ComicDownloaderService', () => {
     });
 
     it('should load settings to variable', done => {
-      var fakeSetting = {
+      const fakeSetting = {
         foo: 'bar'
       };
 
@@ -80,7 +80,7 @@ describe('ComicDownloaderService', () => {
         callback(null, new Buffer(JSON.stringify(fakeSetting)));
         expect(JSON.stringify(service.appSettings)).toBe(JSON.stringify(fakeSetting));
         done();
-      })
+      });
 
       service.readSettings();
     });
@@ -90,7 +90,7 @@ describe('ComicDownloaderService', () => {
       spyOn(fs, 'readFile').and.callFake((path, callback) => {
         callback(null, new Buffer(JSON.stringify({})));
         expect(expectCallBack.callback).toHaveBeenCalled();
-      })
+      });
 
       service.readSettings(expectCallBack.callback);
     });
@@ -123,7 +123,7 @@ describe('ComicDownloaderService', () => {
 
     it('should write default file when config fie not exist', () => {
       const errMsg = 'ENOENT: no such file or directory';
-      let defaultSettings = {
+      const defaultSettings = {
         'comicFolder': '/foo/bar/8ComicDownloader',
         'comicList': []
       };
@@ -271,7 +271,7 @@ describe('ComicDownloaderService', () => {
         comicList: []
       };
 
-      var newComicData = {
+      const newComicData = {
         name: 'comicName',
         url: 'http://foo/bar'
       };
@@ -295,7 +295,7 @@ describe('ComicDownloaderService', () => {
         ]
       };
 
-      var newComicData = {
+      const newComicData = {
         name: 'comicNameNew',
         url: 'http://foo/bar/replace'
       };
@@ -315,7 +315,7 @@ describe('ComicDownloaderService', () => {
         comicList: []
       };
 
-      var newComicData = {
+      const newComicData = {
         name: 'comicName',
         url: 'http://foo/bar'
       };
@@ -333,19 +333,19 @@ describe('ComicDownloaderService', () => {
 
   describe('valid comic url', () => {
     it('should return correct url when use comic page url', () => {
-      let testUrl = 'http://v.comicbus.com/html/102.html';
-      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+      const testUrl = 'http://v.comicbus.com/html/102.html';
+      const expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
 
-      let actual = service.getCorrectComicUrl(testUrl);
+      const actual = service.getCorrectComicUrl(testUrl);
 
       expect(actual).toBe(expected);
     });
 
     it('should return the first volumn use comic volume url', () => {
-      let testUrl = 'http://v.comicbus.com/online/comic-102.html?ch=999';
-      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+      const testUrl = 'http://v.comicbus.com/online/comic-102.html?ch=999';
+      const expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
 
-      let actual = service.getCorrectComicUrl(testUrl);
+      const actual = service.getCorrectComicUrl(testUrl);
 
       expect(actual).toBe(expected);
     });
@@ -353,7 +353,7 @@ describe('ComicDownloaderService', () => {
 
   describe('get url content', () => {
     it('should do a right request', fakeAsync(() => {
-      let actualOpt, actualHtml
+      let actualOpt;
       const requestOpts = {
         url: 'http://foo/bar',
         encoding: null,

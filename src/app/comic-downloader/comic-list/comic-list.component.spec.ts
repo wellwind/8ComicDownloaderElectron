@@ -68,7 +68,7 @@ describe('ComicListComponent', () => {
           { name: 'Comic1', url: 'http://comic/url1' },
           { name: 'Comic2', url: 'http://comic/url2' }
         ]
-      }
+      };
       fixture.detectChanges();
 
       const comicList = fixture.debugElement.queryAll(By.css('#comicList > option'));
