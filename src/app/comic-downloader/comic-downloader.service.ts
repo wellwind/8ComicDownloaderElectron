@@ -6,6 +6,7 @@ const fs = window.require('fs');
 const path = window.require('path');
 const mkdirp = require('mkdirp');
 const request = require('request');
+const iconv = require('iconv-lite');
 
 @Injectable()
 export class ComicDownloaderService {
@@ -99,9 +100,10 @@ export class ComicDownloaderService {
     }
   }
 
-  checkComicUrlValid(comicUrl) {
+  checkComicUrlValid(comicUrl: string) {
     return new Promise((resolve, reject) => {
-
+      let result = {name: '', url: ''};
+      resolve(result);
     });
   }
 
@@ -134,7 +136,7 @@ export class ComicDownloaderService {
 
   handleRequestResult(err, response, body): any {
     if (err === null && response.statusCode === 200) {
-      return 'response';
+      return iconv.decode(new Buffer(body), 'big5');
     } else {
       return null;
     }

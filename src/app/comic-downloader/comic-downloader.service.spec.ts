@@ -7,6 +7,7 @@ const os = window.require('os');
 const fs = window.require('fs');
 const mkdirp = require('mkdirp');
 const request = require('request');
+const iconv = require('iconv-lite');
 
 describe('ComicDownloaderService', () => {
 
@@ -337,19 +338,19 @@ describe('ComicDownloaderService', () => {
 
     it('should call handleRequestResult after request finish', fakeAsync(() => {
       spyOn(request, 'call').and.callFake((obj, opt, cb) => {
-        cb(null, {statusCode: 200}, '');
+        cb(null, { statusCode: 200 }, '');
       });
       spyOn(service, 'handleRequestResult').and.returnValue('response');
 
       service.getHtmlFromUrl('http://foo/bar');
       tick();
 
-      expect(service.handleRequestResult).toHaveBeenCalledWith(null, {statusCode: 200}, '');
+      expect(service.handleRequestResult).toHaveBeenCalledWith(null, { statusCode: 200 }, '');
     }));
 
     it('should return null when request has error', fakeAsync(() => {
       spyOn(request, 'call').and.callFake((obj, opt, cb) => {
-        cb('error message', {statusCode: 500}, null);
+        cb('error message', { statusCode: 500 }, null);
       });
       spyOn(service, 'handleRequestResult').and.callThrough();
 
@@ -362,9 +363,9 @@ describe('ComicDownloaderService', () => {
       expect('error message').toBe(actualError);
     }));
 
-    it('should return error when response statu code not equals 200', fakeAsync(() => {
+    it('should return error when response status code not equals 200', fakeAsync(() => {
       spyOn(request, 'call').and.callFake((obj, opt, cb) => {
-        cb(null, {statusCode: 500}, null);
+        cb(null, { statusCode: 500 }, null);
       });
       spyOn(service, 'handleRequestResult').and.callThrough();
 
@@ -376,5 +377,28 @@ describe('ComicDownloaderService', () => {
 
       expect('Response: 500').toBe(actualError);
     }));
+
+    it('should return result when response status code is 200', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, { statusCode: 200 }, 'html content...');
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualResponse;
+      service.getHtmlFromUrl('http://foo/bar').then(responseText => {
+        actualResponse = responseText;
+      });
+      tick();
+
+      expect('html content...').toBe(actualResponse);
+    }));
+  });
+
+  it('handleRequestResult should call iconv.decode', () => {
+    spyOn(iconv, 'decode');
+
+    service.handleRequestResult(null, { statusCode: 200}, 'data...');
+
+    expect(iconv.decode).toHaveBeenCalledWith(new Buffer('data...'), 'big5');
   });
 });
