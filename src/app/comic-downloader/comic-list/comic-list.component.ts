@@ -12,6 +12,7 @@ export class ComicListComponent implements OnInit {
   appSettings;
 
   urlToAdd;
+  selectedComic;
 
   constructor(private service: ComicDownloaderService) { }
 
