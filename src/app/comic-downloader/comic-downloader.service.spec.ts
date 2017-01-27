@@ -295,4 +295,24 @@ describe('ComicDownloaderService', () => {
       expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
     }));
   });
+
+  describe('valid comic url', () => {
+    it('should return correct url when use comic page url', () => {
+      let testUrl = 'http://v.comicbus.com/html/102.html';
+      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+
+      let actual = service.getCorrectComicUrl(testUrl);
+
+      expect(actual).toBe(expected);
+    });
+
+    it('should return the first volumn use comic volume url', () => {
+      let testUrl = 'http://v.comicbus.com/online/comic-102.html?ch=999';
+      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+
+      let actual = service.getCorrectComicUrl(testUrl);
+
+      expect(actual).toBe(expected);
+    });
+  });
 });

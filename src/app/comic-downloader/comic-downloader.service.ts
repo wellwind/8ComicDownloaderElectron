@@ -103,4 +103,12 @@ export class ComicDownloaderService {
 
     });
   }
+
+  getCorrectComicUrl(comicUrl: string) {
+    let splitSlash = comicUrl.split('/');
+    let splitDash = splitSlash[splitSlash.length - 1].split('-');
+    let splitExtName = splitDash[splitDash.length - 1].split('.html');
+    let comicId = splitExtName[0];
+    return "http://v.comicbus.com/online/comic-" + comicId + ".html?ch=1";
+  }
 }
