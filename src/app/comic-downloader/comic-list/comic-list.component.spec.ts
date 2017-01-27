@@ -46,7 +46,7 @@ describe('ComicListComponent', () => {
 
       addComicUrlButton.triggerEventHandler('click', addComicUrlButton);
 
-      expect(service.addComicUrl).toHaveBeenCalledWith('test url...');      
+      expect(service.addComicUrl).toHaveBeenCalledWith('test url...');
     });
 
     it('should not call service.addComicUrl when urlToAdd not input', () => {
@@ -57,7 +57,24 @@ describe('ComicListComponent', () => {
 
       addComicUrlButton.triggerEventHandler('click', addComicUrlButton);
 
-      expect(service.addComicUrl).toHaveBeenCalledTimes(0);      
+      expect(service.addComicUrl).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('comic list selection', () => {
+    it('should show all comics', () => {
+      component.appSettings = {
+        comicList: [
+          { name: 'Comic1', url: 'http://comic/url1' },
+          { name: 'Comic2', url: 'http://comic/url2' }
+        ]
+      }
+      fixture.detectChanges();
+
+      const comicList = fixture.debugElement.queryAll(By.css('#comicList > option'));
+      expect(comicList.length).toBe(2);
+      expect((comicList[0].nativeNode as HTMLElement).textContent.trim()).toBe('Comic1 - http://comic/url1');
+      expect((comicList[0].nativeNode as HTMLElement).attributes['value'].value).toBe('http://comic/url1');
     });
   });
 });
