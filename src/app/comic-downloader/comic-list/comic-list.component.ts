@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ComicDownloaderService } from './../comic-downloader.service';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-comic-list',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComicListComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  appSettings;
+  
+  urlToAdd;
+
+  constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
+  }
+
+  addComicUrl() {
+    if (this.urlToAdd) {
+      this.service.addComicUrl(this.urlToAdd);
+    }
   }
 
 }

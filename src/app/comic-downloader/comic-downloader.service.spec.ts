@@ -6,6 +6,8 @@ import { ElectronService } from './../shared/services/electron.service';
 const os = window.require('os');
 const fs = window.require('fs');
 const mkdirp = require('mkdirp');
+const request = require('request');
+const iconv = require('iconv-lite');
 
 describe('ComicDownloaderService', () => {
 
@@ -24,9 +26,20 @@ describe('ComicDownloaderService', () => {
     electronService = TestBed.get(ElectronService);
   });
 
-  it('should have basic settings file path', inject([ComicDownloaderService], (service: ComicDownloaderService) => {
+  it('should have basic settings file path', () => {
     expect(service.getConfigFilePath()).toBe('/foo/bar/8ComicDownloader/settings.conf');
-  }));
+  });
+
+  it('sould save settings', () => {
+    service.appSettings = { foo: 'bar' };
+    spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
+    spyOn(fs, 'writeFile');
+
+    service.updateSettings();
+
+    expect(service.getConfigFilePath).toHaveBeenCalled();
+    expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
+  })
 
   describe('when read settings', () => {
     it('should call fs.readFile when calling readSettings', () => {
@@ -204,5 +217,221 @@ describe('ComicDownloaderService', () => {
     service.openComicFolder();
 
     expect(electronService.openDirectory).toHaveBeenCalledWith('/foo/bar');
-  })
+  });
+
+  describe('add comic url', () => {
+    beforeEach(() => {
+      spyOn(service, 'getConfigFilePath').and.returnValue('/foo/bar/settings.conf');
+      spyOn(fs, 'writeFile');
+    });
+
+    it('should check url is valid', () => {
+      spyOn(service, 'checkComicUrlValid').and.returnValue({ then: () => { }, reject: () => { } });
+
+      service.addComicUrl('foo');
+
+      expect(service.checkComicUrlValid).toHaveBeenCalledWith('foo');
+    });
+
+    it('should return comic data when call checkComicUrlValid()', done => {
+      spyOn(service, 'getCorrectComicUrl').and.returnValue('http://foo/bar/test');
+      spyOn(service, 'getComicName').and.returnValue(new Promise((resolve, reject) => {
+        resolve('ComicName');
+      }));
+
+      service.checkComicUrlValid('http://foo/bar').then(result => {
+        expect(result).toEqual({ name: 'ComicName', url: 'http://foo/bar/test' });
+        done();
+      });
+    });
+
+    it('should use comic volume url to get comic name', fakeAsync(() => {
+      spyOn(service, 'getCorrectComicUrl').and.returnValue('http://foo/bar/volume');
+      spyOn(service, 'getComicName').and.returnValue({ then: () => { } });
+
+      service.checkComicUrlValid('http://foo/bar');
+      tick();
+
+      expect(service.getComicName).toHaveBeenCalledWith('http://foo/bar/volume');
+    }));
+
+    it('should get comic name from url', done => {
+      spyOn(service, 'getHtmlFromUrl').and.returnValue(new Promise((resolve, reject) => {
+        resolve('<title>ComicName is here</title>');
+      }));
+
+      service.getComicName('http://foo/bar').then(comicName => {
+        expect(comicName).toBe('ComicName');
+        done();
+      });
+    });
+
+    it('should add url to appSettings', fakeAsync(() => {
+      service.appSettings = {
+        comicList: []
+      };
+
+      var newComicData = {
+        name: 'comicName',
+        url: 'http://foo/bar'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('test url...');
+      tick();
+
+      expect(service.appSettings.comicList).toContain(newComicData);
+    }));
+
+    it('should update comic if exist', fakeAsync(() => {
+      service.appSettings = {
+        comicList: [
+          { name: 'comicName0', url: 'http://foo/bar/0' },
+          { name: 'comicNameCurrent', url: 'http://foo/bar/replace' },
+          { name: 'comicName1', url: 'http://foo/bar/1' },
+        ]
+      };
+
+      var newComicData = {
+        name: 'comicNameNew',
+        url: 'http://foo/bar/replace'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('http://foo/bar/');
+      tick();
+
+      expect(service.appSettings.comicList[1]).toEqual(newComicData);
+    }));
+
+    it('should save new appSettings after add comic url', fakeAsync(() => {
+      service.appSettings = {
+        comicList: []
+      };
+
+      var newComicData = {
+        name: 'comicName',
+        url: 'http://foo/bar'
+      };
+
+      spyOn(service, 'checkComicUrlValid').and.returnValue(new Promise((resolve, reject) => {
+        resolve(newComicData);
+      }));
+
+      service.addComicUrl('test url...');
+      tick();
+
+      expect(fs.writeFile).toHaveBeenCalledWith('/foo/bar/settings.conf', JSON.stringify(service.appSettings));
+    }));
+  });
+
+  describe('valid comic url', () => {
+    it('should return correct url when use comic page url', () => {
+      let testUrl = 'http://v.comicbus.com/html/102.html';
+      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+
+      let actual = service.getCorrectComicUrl(testUrl);
+
+      expect(actual).toBe(expected);
+    });
+
+    it('should return the first volumn use comic volume url', () => {
+      let testUrl = 'http://v.comicbus.com/online/comic-102.html?ch=999';
+      let expected = 'http://v.comicbus.com/online/comic-102.html?ch=1';
+
+      let actual = service.getCorrectComicUrl(testUrl);
+
+      expect(actual).toBe(expected);
+    });
+  });
+
+  describe('get url content', () => {
+    it('should do a right request', fakeAsync(() => {
+      let actualOpt, actualHtml
+      const requestOpts = {
+        url: 'http://foo/bar',
+        encoding: null,
+      };
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        actualOpt = opt;
+      });
+
+      service.getHtmlFromUrl('http://foo/bar');
+      tick();
+
+      expect(request.call).toHaveBeenCalled();
+      expect(actualOpt).toEqual(requestOpts);
+    }));
+
+    it('should call handleRequestResult after request finish', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, { statusCode: 200 }, '');
+      });
+      spyOn(service, 'handleRequestResult').and.returnValue('response');
+
+      service.getHtmlFromUrl('http://foo/bar');
+      tick();
+
+      expect(service.handleRequestResult).toHaveBeenCalledWith(null, { statusCode: 200 }, '');
+    }));
+
+    it('should return null when request has error', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb('error message', { statusCode: 500 }, null);
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualError;
+      service.getHtmlFromUrl('http://foo/bar').catch(err => {
+        actualError = err;
+      });
+      tick();
+
+      expect('error message').toBe(actualError);
+    }));
+
+    it('should return error when response status code not equals 200', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, { statusCode: 500 }, null);
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualError;
+      service.getHtmlFromUrl('http://foo/bar').catch(err => {
+        actualError = err;
+      });
+      tick();
+
+      expect('Response: 500').toBe(actualError);
+    }));
+
+    it('should return result when response status code is 200', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, { statusCode: 200 }, 'html content...');
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualResponse;
+      service.getHtmlFromUrl('http://foo/bar').then(responseText => {
+        actualResponse = responseText;
+      });
+      tick();
+
+      expect('html content...').toBe(actualResponse);
+    }));
+  });
+
+  it('handleRequestResult should call iconv.decode', () => {
+    spyOn(iconv, 'decode');
+
+    service.handleRequestResult(null, { statusCode: 200 }, 'data...');
+
+    expect(iconv.decode).toHaveBeenCalledWith(new Buffer('data...'), 'big5');
+  });
 });

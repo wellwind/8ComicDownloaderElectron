@@ -5,6 +5,8 @@ const os = window.require('os');
 const fs = window.require('fs');
 const path = window.require('path');
 const mkdirp = require('mkdirp');
+const request = require('request');
+const iconv = require('iconv-lite');
 
 @Injectable()
 export class ComicDownloaderService {
@@ -15,6 +17,10 @@ export class ComicDownloaderService {
 
   getConfigFilePath() {
     return os.homedir() + '/8ComicDownloader/settings.conf';;
+  }
+
+  updateSettings() {
+    fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
   }
 
   readSettings(callback?) {
@@ -68,12 +74,85 @@ export class ComicDownloaderService {
       .then((newComicFolder) => {
         if (newComicFolder) {
           this.appSettings.comicFolder = newComicFolder;
-          fs.writeFile(this.getConfigFilePath(), JSON.stringify(this.appSettings));
+          this.updateSettings();
         }
       });
   }
 
   openComicFolder() {
     this.electronService.openDirectory(this.appSettings.comicFolder);
+  }
+
+  addComicUrl(comicUrl) {
+    this.checkComicUrlValid(comicUrl)
+      .then((comicData: any) => {
+        this.updateComicToAppSettings(comicData);
+        this.updateSettings();
+      });
+  }
+
+  updateComicToAppSettings(comicData) {
+    let existComic = this.appSettings.comicList.filter((currentComic) => currentComic.url === comicData.url);
+    if (existComic.length > 0) {
+      existComic[0].name = comicData.name;
+    } else {
+      this.appSettings.comicList.push(comicData);
+    }
+  }
+
+  checkComicUrlValid(comicUrl: string) {
+    return new Promise((resolve, reject) => {
+      let result = { name: '', url: '' };
+      result.url = this.getCorrectComicUrl(comicUrl);
+      this.getComicName(result.url).then((comicName: string) => {
+        result.name = comicName;
+
+        resolve(result);
+      });
+    });
+  }
+
+  getCorrectComicUrl(comicUrl: string) {
+    let splitSlash = comicUrl.split('/');
+    let splitDash = splitSlash[splitSlash.length - 1].split('-');
+    let splitExtName = splitDash[splitDash.length - 1].split('.html');
+    let comicId = splitExtName[0];
+    return "http://v.comicbus.com/online/comic-" + comicId + ".html?ch=1";
+  }
+
+  getComicName(comicUrl: string) {
+    return new Promise((resolve, reject) => {
+      this.getHtmlFromUrl(comicUrl).then((pageContent: string) => {
+        const comicName = pageContent.split('<title>')[1].split('</title>')[0].split(' ')[0];
+        resolve(comicName);
+      });
+    });
+  }
+
+  getHtmlFromUrl(targetUrl) {
+    return new Promise((resolve, reject) => {
+      var opt = {
+        url: targetUrl,
+        encoding: null
+      };
+      request.call(this, opt, (err, response, body) => {
+        var result = this.handleRequestResult(err, response, body);
+        if (result) {
+          resolve(result);
+        } else if (err) {
+          reject(err);
+        } else {
+          reject('Response: ' + response.statusCode);
+        }
+      });
+    });
+  }
+
+  handleRequestResult(err, response, body): any {
+    if (err === null && response.statusCode === 200) {
+      return iconv.decode(new Buffer(body), 'big5');
+    } else {
+      return null;
+    }
   }
 }

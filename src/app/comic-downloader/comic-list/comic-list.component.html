@@ -1,7 +1,11 @@
 <div class="row">
   <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 漫畫清單</h3>
   <div class="col-xs-12 col-md-8">
-    <select id="comicList" class="form-control"></select>
+    <select id="comicList" class="form-control" [(ngModel)]="selectedComic">
+      <option *ngFor="let comicData of appSettings?.comicList" [value]="comicData.url">
+        {{ comicData.name }} - {{ comicData.url }}
+        </option>
+    </select>
   </div>
   <div class="col-xs-12 col-md-2">
     <a href="javascript: void(0);" class="btn btn-danger btn-block" id="removeFromComicList">
@@ -14,10 +18,10 @@
     </a>
   </div>
   <div class="col-xs-12 col-md-5" style="margin-top: 5px;">
-<input type="text" id="addComicUrl" value="" class="form-control" placeholder="請輸入漫畫網址..." />
+<input type="text" id="addComicUrl" value="" class="form-control" placeholder="請輸入漫畫網址..." [(ngModel)]="urlToAdd" />
 </div>
 <div class="col-xs-12 col-md-3" style="margin-top: 5px;">
-<a href="javascript: void(0);" class="btn btn-info btn-block" id="addComicUrlButton">
+<a href="javascript: void(0);" class="btn btn-info btn-block" id="addComicUrlButton" (click)="addComicUrl()">
   <i class="fa fa-fw fa-plus"></i> 加入漫畫網址
 </a>
 </div>
