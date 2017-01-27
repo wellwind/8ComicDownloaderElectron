@@ -120,11 +120,23 @@ export class ComicDownloaderService {
         encoding: null
       };
       request.call(this, opt, (err, response, body) => {
-          resolve(this.handleRequestResult(err, response, body));
+        var result = this.handleRequestResult(err, response, body);
+        if (result) {
+          resolve(result);
+        } else if (err) {
+          reject(err);
+        } else {
+          reject('Response: ' + response.statusCode);
+        }
       });
     });
   }
 
-  handleRequestResult(err, response, body) {
+  handleRequestResult(err, response, body): any {
+    if (err === null && response.statusCode === 200) {
+      return 'response';
+    } else {
+      return null;
+    }
   }
 }

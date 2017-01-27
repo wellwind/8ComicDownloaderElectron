@@ -337,14 +337,44 @@ describe('ComicDownloaderService', () => {
 
     it('should call handleRequestResult after request finish', fakeAsync(() => {
       spyOn(request, 'call').and.callFake((obj, opt, cb) => {
-        cb(null, 200, '');
+        cb(null, {statusCode: 200}, '');
       });
-      spyOn(service, 'handleRequestResult');
+      spyOn(service, 'handleRequestResult').and.returnValue('response');
 
       service.getHtmlFromUrl('http://foo/bar');
       tick();
 
-      expect(service.handleRequestResult).toHaveBeenCalledWith(null, 200, '');
+      expect(service.handleRequestResult).toHaveBeenCalledWith(null, {statusCode: 200}, '');
+    }));
+
+    it('should return null when request has error', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb('error message', {statusCode: 500}, null);
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualError;
+      service.getHtmlFromUrl('http://foo/bar').catch(err => {
+        actualError = err;
+      });
+      tick();
+
+      expect('error message').toBe(actualError);
+    }));
+
+    it('should return error when response statu code not equals 200', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, {statusCode: 500}, null);
+      });
+      spyOn(service, 'handleRequestResult').and.callThrough();
+
+      let actualError;
+      service.getHtmlFromUrl('http://foo/bar').catch(err => {
+        actualError = err;
+      });
+      tick();
+
+      expect('Response: 500').toBe(actualError);
     }));
   });
 });
