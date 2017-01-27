@@ -102,8 +102,13 @@ export class ComicDownloaderService {
 
   checkComicUrlValid(comicUrl: string) {
     return new Promise((resolve, reject) => {
-      let result = {name: '', url: ''};
-      resolve(result);
+      let result = { name: '', url: '' };
+      result.url = this.getCorrectComicUrl(comicUrl);
+      this.getComicName(comicUrl).then((comicName: string) => {
+        result.name = comicName;
+
+        resolve(result);
+      });
     });
   }
 
@@ -113,6 +118,15 @@ export class ComicDownloaderService {
     let splitExtName = splitDash[splitDash.length - 1].split('.html');
     let comicId = splitExtName[0];
     return "http://v.comicbus.com/online/comic-" + comicId + ".html?ch=1";
+  }
+
+  getComicName(comicUrl: string) {
+    return new Promise((resolve, reject) => {
+      this.getHtmlFromUrl(comicUrl).then((pageContent: string) => {
+        const comicName = pageContent.split('<title>')[1].split('</title>')[0].split(' ')[0];
+        resolve(comicName);
+      });
+    });
   }
 
   getHtmlFromUrl(targetUrl) {

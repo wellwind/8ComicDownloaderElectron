@@ -233,6 +233,29 @@ describe('ComicDownloaderService', () => {
       expect(service.checkComicUrlValid).toHaveBeenCalledWith('foo');
     });
 
+    it('should return comic data when call checkComicUrlValid()', done => {
+      spyOn(service, 'getCorrectComicUrl').and.returnValue('http://foo/bar/test');
+      spyOn(service, 'getComicName').and.returnValue(new Promise((resolve, reject) => {
+        resolve('ComicName');
+      }));
+
+      service.checkComicUrlValid('http://foo/bar').then(result => {
+        expect(result).toEqual({ name: 'ComicName', url: 'http://foo/bar/test'});
+        done();
+      });
+    });
+
+    it('should get comic name from uel', done => {
+      spyOn(service, 'getHtmlFromUrl').and.returnValue(new Promise((resolve, reject) =>{
+        resolve('<title>ComicName is here</title>');
+      }));
+
+      service.getComicName('http://foo/bar').then(comicName => {
+        expect(comicName).toBe('ComicName');
+        done();
+      });
+    });
+
     it('should add url to appSettings', fakeAsync(() => {
       service.appSettings = {
         comicList: []
