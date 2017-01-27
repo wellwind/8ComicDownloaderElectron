@@ -240,13 +240,23 @@ describe('ComicDownloaderService', () => {
       }));
 
       service.checkComicUrlValid('http://foo/bar').then(result => {
-        expect(result).toEqual({ name: 'ComicName', url: 'http://foo/bar/test'});
+        expect(result).toEqual({ name: 'ComicName', url: 'http://foo/bar/test' });
         done();
       });
     });
 
-    it('should get comic name from uel', done => {
-      spyOn(service, 'getHtmlFromUrl').and.returnValue(new Promise((resolve, reject) =>{
+    it('should use comic volume url to get comic name', fakeAsync(() => {
+      spyOn(service, 'getCorrectComicUrl').and.returnValue('http://foo/bar/volume');
+      spyOn(service, 'getComicName').and.returnValue({ then: () => { } });
+
+      service.checkComicUrlValid('http://foo/bar');
+      tick();
+
+      expect(service.getComicName).toHaveBeenCalledWith('http://foo/bar/volume');
+    }));
+
+    it('should get comic name from url', done => {
+      spyOn(service, 'getHtmlFromUrl').and.returnValue(new Promise((resolve, reject) => {
         resolve('<title>ComicName is here</title>');
       }));
 
@@ -420,7 +430,7 @@ describe('ComicDownloaderService', () => {
   it('handleRequestResult should call iconv.decode', () => {
     spyOn(iconv, 'decode');
 
-    service.handleRequestResult(null, { statusCode: 200}, 'data...');
+    service.handleRequestResult(null, { statusCode: 200 }, 'data...');
 
     expect(iconv.decode).toHaveBeenCalledWith(new Buffer('data...'), 'big5');
   });
