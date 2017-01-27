@@ -334,6 +334,17 @@ describe('ComicDownloaderService', () => {
       expect(request.call).toHaveBeenCalled();
       expect(actualOpt).toEqual(requestOpts);
     }));
-  });
 
+    it('should call handleRequestResult after request finish', fakeAsync(() => {
+      spyOn(request, 'call').and.callFake((obj, opt, cb) => {
+        cb(null, 200, '');
+      });
+      spyOn(service, 'handleRequestResult');
+
+      service.getHtmlFromUrl('http://foo/bar');
+      tick();
+
+      expect(service.handleRequestResult).toHaveBeenCalledWith(null, 200, '');
+    }));
+  });
 });

@@ -120,7 +120,11 @@ export class ComicDownloaderService {
         encoding: null
       };
       request.call(this, opt, (err, response, body) => {
+          resolve(this.handleRequestResult(err, response, body));
       });
     });
+  }
+
+  handleRequestResult(err, response, body) {
   }
 }
