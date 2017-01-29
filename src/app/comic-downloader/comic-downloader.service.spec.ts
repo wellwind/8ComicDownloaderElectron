@@ -434,4 +434,32 @@ describe('ComicDownloaderService', () => {
 
     expect(iconv.decode).toHaveBeenCalledWith(new Buffer('data...'), 'big5');
   });
+
+  describe('remove comic data', () => {
+    beforeEach(() => {
+      spyOn(service, 'updateSettings');
+    });
+    it('should remove comic data', () => {
+      service.appSettings = {
+        comicList: [
+          { name: 'Comic1', url: 'http://foo/bar/comic1' },
+          { name: 'Comic2', url: 'http://foo/bar/comic2' },
+        ]
+      };
+
+      service.removeComicData({ name: 'Comic1', url: 'http://foo/bar/comic1' });
+
+      expect(service.appSettings.comicList.length).toBe(1);
+      expect(service.appSettings.comicList[0]).toEqual({ name: 'Comic2', url: 'http://foo/bar/comic2' });
+    });
+
+    it('should call service.updateSetting() after remove comic data', () => {
+      service.appSettings = {
+        comicList: []
+      };
+      service.removeComicData({});
+
+      expect(service.updateSettings).toHaveBeenCalled();
+    });
+  });
 });
