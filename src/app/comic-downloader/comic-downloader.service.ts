@@ -165,4 +165,8 @@ export class ComicDownloaderService {
     }
     this.updateSettings();
   }
+
+  getImageList(comicUrl) {
+
+  }
 }

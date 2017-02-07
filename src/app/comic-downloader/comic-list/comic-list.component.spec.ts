@@ -112,4 +112,30 @@ describe('ComicListComponent', () => {
       expect(service.removeComicData).not.toHaveBeenCalled();
     }));
   });
+
+  describe('get comic images url list', () => {
+
+    beforeEach(() => {
+      spyOn(service, 'getImageList');
+
+      component.appSettings = {
+        comicList: [
+          { name: 'Comic1', url: 'http://comic/url1' },
+          { name: 'Comic2', url: 'http://comic/url2' }
+        ]
+      };
+      fixture.detectChanges();
+    });
+
+    it('should call service.getImageList()', fakeAsync(() => {
+      component.selectedComic = component.appSettings.comicList[0].url;
+      tick();
+
+      const getListButton = fixture.debugElement.query(By.css('#getPictureList'));
+      getListButton.triggerEventHandler('click', getListButton);
+
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/url1');
+    }));
+
+  });
 });

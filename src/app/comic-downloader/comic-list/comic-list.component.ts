@@ -30,4 +30,8 @@ export class ComicListComponent implements OnInit {
       this.service.removeComicData({ name: '', url: this.selectedComic });
     }
   }
+
+  getPictureList() {
+    this.service.getImageList(this.selectedComic);
+  }
 }
