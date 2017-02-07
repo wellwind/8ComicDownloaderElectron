@@ -46,9 +46,20 @@ settings.conf
 # build file
 dist
 
+# release file
+release
+
+# prepared files in src
+src/package.json
+src/assets/jquery.min.js
+src/assets/bootstrap.min.js
+
 # Skip pack files
 8comic-downloader-electron*
 app.asar
 
 # Mac OS
 .DS_Store
+
+# karma-electron
+.electron
