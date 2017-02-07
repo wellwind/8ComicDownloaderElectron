@@ -79,7 +79,8 @@ describe('ComicListComponent', () => {
   });
 
   describe('remove selected comic from comic list', () => {
-    it('should call service.removeComicData()', fakeAsync(() => {
+
+    beforeEach(() => {
       spyOn(service, 'removeComicData');
 
       component.appSettings = {
@@ -89,7 +90,9 @@ describe('ComicListComponent', () => {
         ]
       };
       fixture.detectChanges();
+    });
 
+    it('should call service.removeComicData()', fakeAsync(() => {
       component.selectedComic = component.appSettings.comicList[0].url;
       tick();
 
@@ -97,6 +100,16 @@ describe('ComicListComponent', () => {
       removeButton.triggerEventHandler('click', removeButton);
 
       expect(service.removeComicData).toHaveBeenCalledWith({ name: '', url: 'http://comic/url1' });
+    }));
+
+    it('should not call service.removeComicData() when not select any comic', fakeAsync(() => {
+      component.selectedComic = undefined;
+      tick();
+
+      const removeButton = fixture.debugElement.query(By.css('#removeFromComicList'));
+      removeButton.triggerEventHandler('click', removeButton);
+
+      expect(service.removeComicData).not.toHaveBeenCalled();
     }));
   });
 });
