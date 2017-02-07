@@ -25,4 +25,8 @@ export class ComicListComponent implements OnInit {
     }
   }
 
+  removeComicData() {
+    this.service.removeComicData({name: '', url: this.selectedComic});
+  }
+
 }

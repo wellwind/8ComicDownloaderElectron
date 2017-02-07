@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -76,5 +76,27 @@ describe('ComicListComponent', () => {
       expect((comicList[0].nativeNode as HTMLElement).textContent.trim()).toBe('Comic1 - http://comic/url1');
       expect((comicList[0].nativeNode as HTMLElement).attributes['value'].value).toBe('http://comic/url1');
     });
+  });
+
+  describe('remove selected comic from comic list', () => {
+    it('should call service.removeComicData()', fakeAsync(() => {
+      spyOn(service, 'removeComicData');
+
+      component.appSettings = {
+        comicList: [
+          { name: 'Comic1', url: 'http://comic/url1' },
+          { name: 'Comic2', url: 'http://comic/url2' }
+        ]
+      };
+      fixture.detectChanges();
+
+      component.selectedComic = component.appSettings.comicList[0].url;
+      tick();
+
+      const removeButton = fixture.debugElement.query(By.css('#removeFromComicList'));
+      removeButton.triggerEventHandler('click', removeButton);
+
+      expect(service.removeComicData).toHaveBeenCalledWith({ name: '', url: 'http://comic/url1' });
+    }));
   });
 });
