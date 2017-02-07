@@ -155,4 +155,14 @@ export class ComicDownloaderService {
       return null;
     }
   }
+
+  removeComicData(comicData) {
+    for (const index in this.appSettings.comicList) {
+      if (this.appSettings.comicList[index].url === comicData.url) {
+        this.appSettings.comicList.splice(index, 1);
+        break;
+      }
+    }
+    this.updateSettings();
+  }
 }
