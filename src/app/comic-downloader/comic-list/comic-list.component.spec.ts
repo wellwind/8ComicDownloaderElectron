@@ -28,6 +28,18 @@ describe('ComicListComponent', () => {
     service = TestBed.get(ComicDownloaderService);
   });
 
+  it('should have a default for getLastVolumes is 10', () => {
+    const lastVolumesText = fixture.debugElement.query(By.css('#lastVols')).nativeElement as HTMLElement;
+
+    expect(lastVolumesText.attributes['value'].value).toBe('10');
+  });
+
+  it('shoulde have a default for getAll is false', () => {
+    const getAllCheckBox = fixture.debugElement.query(By.css('#getAllPictures')).nativeElement as any;
+
+    expect(getAllCheckBox.checked).toBeFalsy();
+  });
+
   describe('add comic url', () => {
     it('should call component.addComicUrl', () => {
       spyOn(component, 'addComicUrl');
