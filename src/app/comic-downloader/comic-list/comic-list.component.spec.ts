@@ -141,6 +141,7 @@ describe('ComicListComponent', () => {
 
     it('should call service.getImageList()', fakeAsync(() => {
       component.selectedComic = component.appSettings.comicList[0].url;
+      component.getAll = true;
       tick();
 
       const getListButton = fixture.debugElement.query(By.css('#getPictureList'));
@@ -149,5 +150,15 @@ describe('ComicListComponent', () => {
       expect(service.getImageList).toHaveBeenCalledWith('http://comic/url1');
     }));
 
+    it('should call service.getImageList() with last volumes parameter', () => {
+      component.selectedComic = component.appSettings.comicList[1].url;
+      component.getAll = false;
+      component.getLastVolumes = 15;
+
+      const getListButton = fixture.debugElement.query(By.css('#getPictureList'));
+      getListButton.triggerEventHandler('click', getListButton);
+
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/url2', 15);
+    });
   });
 });

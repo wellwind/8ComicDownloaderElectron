@@ -35,6 +35,10 @@ export class ComicListComponent implements OnInit {
   }
 
   getPictureList() {
-    this.service.getImageList(this.selectedComic);
+    if (this.getAll) {
+      this.service.getImageList(this.selectedComic);
+    } else {
+      this.service.getImageList(this.selectedComic, this.getLastVolumes);
+    }
   }
 }
