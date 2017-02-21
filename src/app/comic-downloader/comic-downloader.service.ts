@@ -166,7 +166,7 @@ export class ComicDownloaderService {
     this.updateSettings();
   }
 
-  getImageList(comicUrl) {
+  getImageList(comicUrl, lastVols = 0) {
 
   }
 }

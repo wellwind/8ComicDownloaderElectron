@@ -28,6 +28,18 @@ describe('ComicListComponent', () => {
     service = TestBed.get(ComicDownloaderService);
   });
 
+  it('should have a default for getLastVolumes is 10', () => {
+    const lastVolumesText = fixture.debugElement.query(By.css('#lastVols')).nativeElement as HTMLElement;
+
+    expect(lastVolumesText.attributes['value'].value).toBe('10');
+  });
+
+  it('shoulde have a default for getAll is false', () => {
+    const getAllCheckBox = fixture.debugElement.query(By.css('#getAllPictures')).nativeElement as any;
+
+    expect(getAllCheckBox.checked).toBeFalsy();
+  });
+
   describe('add comic url', () => {
     it('should call component.addComicUrl', () => {
       spyOn(component, 'addComicUrl');
@@ -129,6 +141,7 @@ describe('ComicListComponent', () => {
 
     it('should call service.getImageList()', fakeAsync(() => {
       component.selectedComic = component.appSettings.comicList[0].url;
+      component.getAll = true;
       tick();
 
       const getListButton = fixture.debugElement.query(By.css('#getPictureList'));
@@ -137,5 +150,15 @@ describe('ComicListComponent', () => {
       expect(service.getImageList).toHaveBeenCalledWith('http://comic/url1');
     }));
 
+    it('should call service.getImageList() with last volumes parameter', () => {
+      component.selectedComic = component.appSettings.comicList[1].url;
+      component.getAll = false;
+      component.getLastVolumes = 15;
+
+      const getListButton = fixture.debugElement.query(By.css('#getPictureList'));
+      getListButton.triggerEventHandler('click', getListButton);
+
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/url2', 15);
+    });
   });
 });
