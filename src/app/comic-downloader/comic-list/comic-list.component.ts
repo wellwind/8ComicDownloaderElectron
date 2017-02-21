@@ -13,10 +13,13 @@ export class ComicListComponent implements OnInit {
 
   urlToAdd;
   selectedComic;
+  getLastVolumes;
+  getAll;
 
   constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
+    this.getLastVolumes = 10;
   }
 
   addComicUrl() {
@@ -32,6 +35,10 @@ export class ComicListComponent implements OnInit {
   }
 
   getPictureList() {
-    this.service.getImageList(this.selectedComic);
+    if (this.getAll) {
+      this.service.getImageList(this.selectedComic);
+    } else {
+      this.service.getImageList(this.selectedComic, this.getLastVolumes);
+    }
   }
 }
