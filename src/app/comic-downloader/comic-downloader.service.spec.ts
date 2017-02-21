@@ -1,3 +1,7 @@
+import * as path from 'path';
+import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
+import { Comic8Parser } from './../shared/parsers/8comic-parser';
+import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
 /* tslint:disable:no-unused-variable */
 import { TestBed, async, fakeAsync, tick, inject } from '@angular/core/testing';
 import { ComicDownloaderService } from './comic-downloader.service';
@@ -461,5 +465,143 @@ describe('ComicDownloaderService', () => {
 
       expect(service.updateSettings).toHaveBeenCalled();
     });
+  });
+
+  describe('get comic image list', () => {
+    beforeEach(() => {
+      spyOn(service, 'getHtmlFromUrl').and.returnValue(new Promise((resolve, reject) => {
+        resolve('...var cs=\'code\'.....var ti=itemId;.....');
+      }));
+
+      spyOn(Comic8Parser, 'getComicUrls').and.returnValue([
+        {
+          Vol: '0001',
+          Urls: [
+            'http://comic/0001/image01.jpg',
+            'http://comic/0001/image02.jpg',
+          ]
+        },
+        {
+          Vol: '0002',
+          Urls: [
+            'http://comic/0002/image01.jpg',
+            'http://comic/0002/image02.jpg',
+          ]
+        },
+        {
+          Vol: '0003',
+          Urls: [
+            'http://comic/0003/image01.jpg',
+            'http://comic/0003/image02.jpg',
+          ]
+        },
+        {
+          Vol: '0004',
+          Urls: [
+            'http://comic/0004/image01.jpg',
+            'http://comic/0004/image02.jpg',
+          ]
+        }
+      ]);
+
+      spyOn(service, 'parseComicName').and.returnValue('TestComic');
+    });
+
+    it('should call getHtmlFromUrl with comicUrl', () => {
+      service.getImageList('http://comic/url');
+
+      expect(service.getHtmlFromUrl).toHaveBeenCalledWith('http://comic/url');
+    });
+
+    it('should call Comic8Parser.getComicUrls with itemId and code', fakeAsync(() => {
+      service.getImageList('http://comic/url');
+      tick();
+
+      expect(Comic8Parser.getComicUrls).toHaveBeenCalledWith('code', 'itemId');
+    }));
+
+    it('should set toDownloadComicImageList correctly', fakeAsync(() => {
+      service.getImageList('http://comic/url');
+      tick();
+
+      const expected: ComicImageInfo[] = [
+        {
+          savedPath: `TestComic${path.sep}0001${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0001/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0001${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0001/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0002${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0002/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0002${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0002/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0003/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0003/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0004/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0004/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+      ];
+
+      expect(service.toDownloadComicImageList.length).toEqual(expected.length);
+      expect(service.toDownloadComicImageList[0]).toEqual(expected[0]);
+      expect(service.toDownloadComicImageList[7]).toEqual(expected[7]);
+    }));
+
+    it('should set toDownloadComicImageList correctly if want last N vols', fakeAsync(() => {
+      service.getImageList('http://comic/url', 2);
+      tick();
+
+      const expected: ComicImageInfo[] = [
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0003/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0003/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0004/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0004/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+      ];
+
+      expect(service.toDownloadComicImageList.length).toEqual(expected.length);
+      expect(service.toDownloadComicImageList[0]).toEqual(expected[0]);
+      expect(service.toDownloadComicImageList[3]).toEqual(expected[3]);
+    }));
   });
 });
