@@ -1,4 +1,8 @@
+import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
+import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
+import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ElectronService } from './../shared/services/electron.service';
+import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 
 const os = window.require('os');
@@ -12,6 +16,7 @@ const iconv = require('iconv-lite');
 export class ComicDownloaderService {
 
   appSettings: any;
+  toDownloadComicImageList: ComicImageInfo[];
 
   constructor(private electronService: ElectronService) { }
 
@@ -123,10 +128,14 @@ export class ComicDownloaderService {
   getComicName(comicUrl: string) {
     return new Promise((resolve, reject) => {
       this.getHtmlFromUrl(comicUrl).then((pageContent: string) => {
-        const comicName = pageContent.split('<title>')[1].split('</title>')[0].split(' ')[0];
+        const comicName = this.parseComicName(pageContent);
         resolve(comicName);
       });
     });
+  }
+
+  parseComicName(pageContent) {
+    return pageContent.split('<title>')[1].split('</title>')[0].split(' ')[0];
   }
 
   getHtmlFromUrl(targetUrl) {
@@ -167,6 +176,38 @@ export class ComicDownloaderService {
   }
 
   getImageList(comicUrl, lastVols = 0) {
+    this.getHtmlFromUrl(comicUrl).then((content: string) => {
+      const comicName = this.parseComicName(content);
+      const code = content.split('var cs=\'')[1].split('\'')[0];
+      const itemId = content.split('var ti=')[1].split(';')[0];
 
+      let imageInfo = Comic8Parser.getComicUrls(code, itemId);
+      if (lastVols > 0) {
+        imageInfo = _.takeRight(imageInfo, lastVols);
+      }
+
+      this.toDownloadComicImageList = [];
+
+      const result: ComicImageInfo[] = this.imageInfoListToDownloadList(imageInfo, comicName);
+
+      this.toDownloadComicImageList = [...result];
+    });
+  }
+
+  imageInfoListToDownloadList(imageInfoList, comicName) {
+    const result: ComicImageInfo[] = [];
+    imageInfoList.forEach(info => {
+      const vol = info.Vol;
+      info.Urls.forEach((url: string) => {
+        const urlSplit = url.split('/');
+        const imageFileName = urlSplit[urlSplit.length - 1];
+        result.push({
+          savedPath: `${comicName}${path.sep}${vol}${path.sep}${imageFileName}`,
+          imageUrl: url,
+          status: ComicImageDownloadStatus.Ready
+        });
+      });
+    });
+    return result;
   }
 }
