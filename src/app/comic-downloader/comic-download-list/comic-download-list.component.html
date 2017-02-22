@@ -36,7 +36,7 @@
       </thead>
       <tbody id="comicUrlsList" style="height: 500px; overflow: auto">
         <tr *ngFor="let comicImage of getToDownloadImageList()">
-          <td width="15%">{{ comicImage.status }}</td>
+          <td width="15%">{{ comicImage.status | downloadStatus }}</td>
           <td width="40%">{{ comicImage.savedPath }}</td>
           <td width="45%">{{ comicImage.imageUrl }}</td>
         </tr>

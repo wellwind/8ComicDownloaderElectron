@@ -1,12 +1,12 @@
-import { ElectronService } from './../../shared/services/electron.service';
-import * as path from 'path';
 /* tslint:disable:no-unused-variable */
+import * as path from 'path';
+import {ComicDownloaderModule} from '../comic-downloader.module';
+import { ElectronService } from './../../shared/services/electron.service';
 import { ComicImageDownloadStatus } from './../../shared/enums/comic-image-download-status.enum';
 import { ComicDownloaderService } from './../comic-downloader.service';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
 import { ComicDownloadListComponent } from './comic-download-list.component';
 
 describe('ComicDownloadListComponent', () => {
@@ -16,8 +16,7 @@ describe('ComicDownloadListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDownloadListComponent],
-      providers: [ComicDownloaderService, ElectronService]
+      imports: [ComicDownloaderModule]
     })
       .compileComponents();
   }));
@@ -58,10 +57,10 @@ describe('ComicDownloadListComponent', () => {
 
     expect(service.toDownloadComicImageList.length).toBe(imageList.length);
 
-    expect((imageList[0].queryAll(By.css('td'))[0].nativeElement).textContent).toBe(ComicImageDownloadStatus.Ready.toString());
-    expect((imageList[1].queryAll(By.css('td'))[0].nativeElement).textContent).toBe(ComicImageDownloadStatus.Error.toString());
-    expect((imageList[2].queryAll(By.css('td'))[0].nativeElement).textContent).toBe(ComicImageDownloadStatus.Finish.toString());
-    expect((imageList[3].queryAll(By.css('td'))[0].nativeElement).textContent).toBe(ComicImageDownloadStatus.Downloading.toString());
+    expect((imageList[0].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('準備中');
+    expect((imageList[1].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('錯誤');
+    expect((imageList[2].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('完成');
+    expect((imageList[3].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('下載中');
 
     expect((imageList[0].queryAll(By.css('td'))[1].nativeElement).textContent).toBe(`TestComic${path.sep}0003${path.sep}image01.jpg`);
     expect((imageList[0].queryAll(By.css('td'))[2].nativeElement).textContent).toBe('http://comic/0003/image01.jpg');

@@ -1,3 +1,4 @@
+import { DownloadStatusPipe } from './../comic-download-list/download-status.pipe';
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
