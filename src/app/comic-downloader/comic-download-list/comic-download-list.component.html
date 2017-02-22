@@ -5,7 +5,7 @@
       <a href="javascript: void(0);" class="btn btn-success btn-block" id="oneKeyDownload" data-toggle="tooltip" data-placement="top"
         title="一鍵下載會將[漫畫清單]中所有漫畫分析成下載清單並執行下載動作">
         <i class="fa fa-fw fa-magic"></i> 一鍵下載
-      </a>
+        </a>
     </div>
     <div class="col-xs-12 col-md-2">
       <a href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls">
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="col-xs-12" id="pictureListContainer">
-    <table class="table table-responsive table-striped table-hover header-fixed" id="pictuerList">
+    <table class="table table-responsive table-striped table-hover header-fixed" id="imageList">
       <thead>
         <tr class="info">
           <th width="15%">狀態</th>
@@ -34,7 +34,13 @@
           <th width="45%">漫畫網址</th>
         </tr>
       </thead>
-      <tbody id="comicUrlsList" style="height: 500px;"></tbody>
-</table>
-</div>
+      <tbody id="comicUrlsList" style="height: 500px; overflow: auto">
+        <tr *ngFor="let comicImage of getToDownloadImageList()">
+          <td width="15%">{{ comicImage.status }}</td>
+          <td width="40%">{{ comicImage.savedPath }}</td>
+          <td width="45%">{{ comicImage.imageUrl }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

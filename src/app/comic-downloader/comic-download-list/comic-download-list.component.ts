@@ -1,3 +1,5 @@
+import { ComicImageInfo } from './../../shared/interfaces/comic-image-info';
+import { ComicDownloaderService } from './../comic-downloader.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComicDownloadListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private service: ComicDownloaderService) { }
 
   ngOnInit() {
   }
 
+  getToDownloadImageList(): ComicImageInfo[] {
+    return this.service.toDownloadComicImageList;
+  }
 }
