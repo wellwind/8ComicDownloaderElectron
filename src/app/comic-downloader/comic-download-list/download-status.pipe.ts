@@ -13,7 +13,7 @@ export class DownloadStatusPipe implements PipeTransform {
     mapping[ComicImageDownloadStatus.Finish] = '完成';
     mapping[ComicImageDownloadStatus.Error] = '錯誤';
 
-    return mapping[value];
+    return mapping[value] || '';
   }
 
 }

@@ -23,4 +23,8 @@ describe('DownloadStatusPipe', () => {
   it('should transform ComicImageDownloadStatus.Error to chinese', () => {
     expect(pipe.transform(ComicImageDownloadStatus.Error)).toBe('錯誤');
   });
+
+  it('should return empty when input is not in ComicImageDownloadStatus', () =>{
+    expect(pipe.transform(9999)).toBe('');
+  });
 });
