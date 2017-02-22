@@ -7,11 +7,13 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
+import { DownloadStatusPipe } from './comic-downloader/comic-download-list/download-status.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    DownloadStatusPipe
   ],
   imports: [
     BrowserModule,
