@@ -1,3 +1,4 @@
+import { DownloadStatusPipe } from './comic-download-list/download-status.pipe';
 import { FormsModule } from '@angular/forms';
 import { ComicDownloaderService } from './comic-downloader.service';
 import { SharedModule } from './../shared/shared.module';
@@ -17,7 +18,12 @@ import { ComicDownloadListComponent } from './comic-download-list/comic-download
   providers: [
     ComicDownloaderService
   ],
-  declarations: [ComicDownloaderComponent, ComicFolderComponent, ComicListComponent, ComicDownloadListComponent],
+  declarations: [
+    ComicDownloaderComponent,
+    ComicFolderComponent,
+    ComicListComponent,
+    ComicDownloadListComponent,
+    DownloadStatusPipe],
   exports: [
     ComicDownloaderComponent
   ]
