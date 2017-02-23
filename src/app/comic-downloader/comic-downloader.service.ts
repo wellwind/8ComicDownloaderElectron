@@ -14,9 +14,18 @@ const iconv = require('iconv-lite');
 
 @Injectable()
 export class ComicDownloaderService {
-
   appSettings: any;
   toDownloadComicImageList: ComicImageInfo[];
+
+  /**
+   * 最大平行下載數
+   */
+  maxParallelDownloads = 5;
+
+  /**
+   * 目前佇列中下載數量
+   */
+  queuedDownloadTaskCount = 0;
 
   constructor(private electronService: ElectronService) { }
 
@@ -209,5 +218,39 @@ export class ComicDownloaderService {
       });
     });
     return result;
+  }
+
+
+  downloadImage(image: ComicImageInfo) {
+    return new Promise((resolve, reject) => {
+      image.status = ComicImageDownloadStatus.Downloading;
+      // TODO: 加入真正的下載邏輯
+      setTimeout(() => {
+        image.status = ComicImageDownloadStatus.Finish;
+        --this.queuedDownloadTaskCount;
+        resolve();
+      }, Math.random() * 3000);
+    });
+  }
+
+  startDownload() {
+    // TODO: 加入更適合的測試案例
+    this.queuedDownloadTaskCount = 0;
+
+    const downloadTask = this.toDownloadComicImageList.map(image => {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(() => {
+          if (this.queuedDownloadTaskCount < this.maxParallelDownloads) {
+            ++this.queuedDownloadTaskCount;
+            this.downloadImage(image).then(() => {
+              resolve();
+            });
+            clearInterval(interval);
+          }
+        }, 500);
+      });
+    });
+
+    return Promise.all(downloadTask);
   }
 }

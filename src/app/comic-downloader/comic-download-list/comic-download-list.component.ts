@@ -17,4 +17,10 @@ export class ComicDownloadListComponent implements OnInit {
   getToDownloadImageList(): ComicImageInfo[] {
     return this.service.toDownloadComicImageList;
   }
+
+  startDownload() {
+    this.service.startDownload().then(() => {
+      alert('全部下載完成');
+    });
+  }
 }
