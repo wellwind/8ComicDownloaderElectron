@@ -63,3 +63,6 @@ app.asar
 
 # karma-electron
 .electron
+
+# vscode
+.vscode
