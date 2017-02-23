@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 import * as path from 'path';
-import {ComicDownloaderModule} from '../comic-downloader.module';
+import { ComicDownloaderModule } from '../comic-downloader.module';
 import { ElectronService } from './../../shared/services/electron.service';
 import { ComicImageDownloadStatus } from './../../shared/enums/comic-image-download-status.enum';
 import { ComicDownloaderService } from './../comic-downloader.service';
@@ -67,7 +67,28 @@ describe('ComicDownloadListComponent', () => {
 
     expect((imageList[3].queryAll(By.css('td'))[1].nativeElement).textContent).toBe(`TestComic${path.sep}0004${path.sep}image02.jpg`);
     expect((imageList[3].queryAll(By.css('td'))[2].nativeElement).textContent).toBe(`http://comic/0004/image02.jpg`);
-
-
   }));
+
+  describe('start download', () => {
+    beforeEach(() => {
+      spyOn(service, 'startDownload').and.returnValue(new Promise((resolve) => {
+        resolve();
+      }));
+
+      spyOn(window, 'alert');
+    });
+
+    it('should call service.startDownload()', () => {
+      component.startDownload();
+      expect(service.startDownload).toHaveBeenCalled();
+    });
+
+    it('should alert after download complete', fakeAsync(() => {
+      component.startDownload();
+      tick();
+
+      expect(window.alert).toHaveBeenCalledWith('全部下載完成');
+    }));
+  });
+
 });
