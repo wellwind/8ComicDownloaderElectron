@@ -227,7 +227,6 @@ export class ComicDownloaderService {
       // TODO: 加入真正的下載邏輯
       setTimeout(() => {
         image.status = ComicImageDownloadStatus.Finish;
-        --this.queuedDownloadTaskCount;
         resolve();
       }, Math.random() * 3000);
     });
@@ -236,14 +235,16 @@ export class ComicDownloaderService {
   startDownload() {
     // TODO: 加入更適合的測試案例
     this.queuedDownloadTaskCount = 0;
+    let currentTaskMaxIndex = this.maxParallelDownloads;
 
-    // TODO: 能依照順序等待，目前會往後先執行
-    const downloadTask = this.toDownloadComicImageList.map(image => {
+    const downloadTask = this.toDownloadComicImageList.map((image, index) => {
       return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
-          if (this.queuedDownloadTaskCount < this.maxParallelDownloads) {
+          if (this.queuedDownloadTaskCount < this.maxParallelDownloads && index < currentTaskMaxIndex) {
             ++this.queuedDownloadTaskCount;
             this.downloadImage(image).then(() => {
+              --this.queuedDownloadTaskCount;
+              ++currentTaskMaxIndex;
               resolve();
             });
             clearInterval(interval);
