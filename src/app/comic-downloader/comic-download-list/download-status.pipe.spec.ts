@@ -9,7 +9,7 @@ describe('DownloadStatusPipe', () => {
   });
 
   it('should transform ComicImageDownloadStatus.Ready to chinese', () => {
-    expect(pipe.transform(ComicImageDownloadStatus.Ready)).toBe('準備中');
+    expect(pipe.transform(ComicImageDownloadStatus.Ready)).toBe('未下載');
   });
 
   it('should transform ComicImageDownloadStatus.Downloading to chinese', () => {
@@ -22,6 +22,10 @@ describe('DownloadStatusPipe', () => {
 
   it('should transform ComicImageDownloadStatus.Error to chinese', () => {
     expect(pipe.transform(ComicImageDownloadStatus.Error)).toBe('錯誤');
+  });
+
+  it('should transform ComicImageDownloadStatus.Exist to chinese', () => {
+    expect(pipe.transform(ComicImageDownloadStatus.Exist)).toBe('已存在');
   });
 
   it('should return empty when input is not in ComicImageDownloadStatus', () =>{

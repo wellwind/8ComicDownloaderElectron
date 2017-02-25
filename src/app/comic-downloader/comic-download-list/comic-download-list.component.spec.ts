@@ -51,22 +51,41 @@ describe('ComicDownloadListComponent', () => {
         imageUrl: 'http://comic/0004/image02.jpg',
         status: ComicImageDownloadStatus.Downloading
       },
+      {
+        savedPath: `TestComic${path.sep}0004${path.sep}image03.jpg`,
+        imageUrl: 'http://comic/0004/image03.jpg',
+        status: ComicImageDownloadStatus.Exist
+      },
     ];
     fixture.detectChanges();
     const imageList = fixture.debugElement.queryAll(By.css('#imageList > tbody > tr'));
 
     expect(service.toDownloadComicImageList.length).toBe(imageList.length);
 
-    expect((imageList[0].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('準備中');
-    expect((imageList[1].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('錯誤');
-    expect((imageList[2].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('完成');
-    expect((imageList[3].queryAll(By.css('td'))[0].nativeElement).textContent).toBe('下載中');
+    expect((imageList[0].queryAll(By.css('td'))[0].nativeElement).textContent.trim()).toBe('未下載');
+
+    expect((imageList[1].queryAll(By.css('td'))[0].nativeElement).textContent.trim()).toBe('錯誤');
+    expect((imageList[1].queryAll(By.css('td'))[0].nativeElement).classList).toContain('text-danger');
+    expect((imageList[1].queryAll(By.css('td'))[0].query(By.css('i')).nativeElement).classList).toContain('fa-warning');
+
+    expect((imageList[2].queryAll(By.css('td'))[0].nativeElement).textContent.trim()).toBe('完成');
+    expect((imageList[2].queryAll(By.css('td'))[0].nativeElement).classList).toContain('text-success');
+    expect((imageList[2].queryAll(By.css('td'))[0].query(By.css('i')).nativeElement).classList).toContain('fa-check');
+
+    expect((imageList[3].queryAll(By.css('td'))[0].nativeElement).textContent.trim()).toBe('下載中');
+    expect((imageList[3].queryAll(By.css('td'))[0].nativeElement).classList).toContain('text-info');
+    expect((imageList[3].queryAll(By.css('td'))[0].query(By.css('i')).nativeElement).classList).toContain('fa-spin');
+    expect((imageList[3].queryAll(By.css('td'))[0].query(By.css('i')).nativeElement).classList).toContain('fa-spinner');
+
+    expect((imageList[4].queryAll(By.css('td'))[0].nativeElement).textContent.trim()).toBe('已存在');
+    expect((imageList[4].queryAll(By.css('td'))[0].nativeElement).classList).toContain('text-danger');
+    expect((imageList[4].queryAll(By.css('td'))[0].query(By.css('i')).nativeElement).classList).toContain('fa-copy');
 
     expect((imageList[0].queryAll(By.css('td'))[1].nativeElement).textContent).toBe(`TestComic${path.sep}0003${path.sep}image01.jpg`);
     expect((imageList[0].queryAll(By.css('td'))[2].nativeElement).textContent).toBe('http://comic/0003/image01.jpg');
 
-    expect((imageList[3].queryAll(By.css('td'))[1].nativeElement).textContent).toBe(`TestComic${path.sep}0004${path.sep}image02.jpg`);
-    expect((imageList[3].queryAll(By.css('td'))[2].nativeElement).textContent).toBe(`http://comic/0004/image02.jpg`);
+    expect((imageList[4].queryAll(By.css('td'))[1].nativeElement).textContent).toBe(`TestComic${path.sep}0004${path.sep}image03.jpg`);
+    expect((imageList[4].queryAll(By.css('td'))[2].nativeElement).textContent).toBe(`http://comic/0004/image03.jpg`);
   }));
 
   describe('start download', () => {

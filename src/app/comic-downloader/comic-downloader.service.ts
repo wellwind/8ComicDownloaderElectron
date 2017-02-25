@@ -237,6 +237,7 @@ export class ComicDownloaderService {
     // TODO: 加入更適合的測試案例
     this.queuedDownloadTaskCount = 0;
 
+    // TODO: 能依照順序等待，目前會往後先執行
     const downloadTask = this.toDownloadComicImageList.map(image => {
       return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
