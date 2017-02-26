@@ -88,6 +88,22 @@ describe('ComicDownloadListComponent', () => {
     expect((imageList[4].queryAll(By.css('td'))[2].nativeElement).textContent).toBe(`http://comic/0004/image03.jpg`);
   }));
 
+  describe('skip if exist', () => {
+    it('should bind component.skipIfExist', () => {
+      component.skipIfExist = true;
+      fixture.detectChanges();
+
+      fixture.debugElement.query(By.css('#skipIfExist')).triggerEventHandler('click', null);
+      fixture.detectChanges();
+
+      expect(component.skipIfExist).toBeFalsy();
+
+      fixture.debugElement.query(By.css('#skipIfExist')).triggerEventHandler('click', null);
+      fixture.detectChanges();
+
+      expect(component.skipIfExist).toBeTruthy();
+    });
+  });
   describe('start download', () => {
     beforeEach(() => {
       spyOn(service, 'startDownload').and.returnValue(new Promise((resolve) => {
@@ -98,8 +114,9 @@ describe('ComicDownloadListComponent', () => {
     });
 
     it('should call service.startDownload()', () => {
+      component.skipIfExist = false;
       component.startDownload();
-      expect(service.startDownload).toHaveBeenCalled();
+      expect(service.startDownload).toHaveBeenCalledWith(component.skipIfExist);
     });
 
     it('should alert after download complete', fakeAsync(() => {

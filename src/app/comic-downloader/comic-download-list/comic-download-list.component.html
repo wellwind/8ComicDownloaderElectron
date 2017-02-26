@@ -20,8 +20,9 @@
     <div class="col-xs-12 col-md-3">
       <div class="checkbox">
         <label>
-                <input type="checkbox" id="skipIfExist" checked>檔案已存在就不下載
-              </label>
+          <input type="checkbox" id="skipIfExist" [checked]="skipIfExist" (click)="toogleSkipIfExist()" />
+          檔案已存在就不下載
+        </label>
       </div>
     </div>
   </div>
@@ -37,11 +38,10 @@
       <tbody id="comicUrlsList" style="height: 500px; overflow: auto">
         <tr *ngFor="let comicImage of getToDownloadImageList()">
           <td width="15%" [ngClass]="{'text-success': comicImage.status === downloadStatusEnum.Finish, 'text-info': comicImage.status === downloadStatusEnum.Downloading, 'text-danger': comicImage.status === downloadStatusEnum.Error || comicImage.status === downloadStatusEnum.Exist}">
-            <i class="fa fa-fw" [ngClass]="{'fa-spinner': comicImage.status === downloadStatusEnum.Downloading, 'fa-spin': comicImage.status === downloadStatusEnum.Downloading, 'fa-check': comicImage.status === downloadStatusEnum.Finish,'fa-warning': comicImage.status === downloadStatusEnum.Error,'fa-copy': comicImage.status === downloadStatusEnum.Exist}"></i>
-              {{ comicImage.status | downloadStatus }}
-              </td>
-              <td width="40%">{{ comicImage.savedPath }}</td>
-              <td width="45%">{{ comicImage.imageUrl }}</td>
+            <i class="fa fa-fw" [ngClass]="{'fa-spinner': comicImage.status === downloadStatusEnum.Downloading, 'fa-spin': comicImage.status === downloadStatusEnum.Downloading, 'fa-check': comicImage.status === downloadStatusEnum.Finish,'fa-warning': comicImage.status === downloadStatusEnum.Error,'fa-copy': comicImage.status === downloadStatusEnum.Exist}"></i>            {{ comicImage.status | downloadStatus }}
+          </td>
+          <td width="40%">{{ comicImage.savedPath }}</td>
+          <td width="45%">{{ comicImage.imageUrl }}</td>
         </tr>
       </tbody>
     </table>
