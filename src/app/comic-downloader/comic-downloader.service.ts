@@ -221,7 +221,7 @@ export class ComicDownloaderService {
   }
 
 
-  downloadImage(image: ComicImageInfo) {
+  downloadImage(image: ComicImageInfo, skipIfExist: boolean) {
     return new Promise((resolve, reject) => {
       image.status = ComicImageDownloadStatus.Downloading;
       // TODO: 加入真正的下載邏輯
@@ -232,7 +232,7 @@ export class ComicDownloaderService {
     });
   }
 
-  startDownload() {
+  startDownload(skipIfExist) {
     // TODO: 加入更適合的測試案例
     this.queuedDownloadTaskCount = 0;
     let currentTaskMaxIndex = this.maxParallelDownloads;
@@ -242,7 +242,7 @@ export class ComicDownloaderService {
         const interval = setInterval(() => {
           if (this.queuedDownloadTaskCount < this.maxParallelDownloads && index < currentTaskMaxIndex) {
             ++this.queuedDownloadTaskCount;
-            this.downloadImage(image).then(() => {
+            this.downloadImage(image, skipIfExist).then(() => {
               --this.queuedDownloadTaskCount;
               ++currentTaskMaxIndex;
               resolve();

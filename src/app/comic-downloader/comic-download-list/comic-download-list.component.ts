@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ComicDownloadListComponent implements OnInit {
   downloadStatusEnum = ComicImageDownloadStatus;
+  skipIfExist = true;
 
   constructor(private service: ComicDownloaderService) { }
 
@@ -20,26 +21,12 @@ export class ComicDownloadListComponent implements OnInit {
     return this.service.toDownloadComicImageList;
   }
 
-  getDownloadStatusIconStyleCondition(comicImage: ComicImageInfo) {
-    return {
-      'fa-spinner': comicImage.status === ComicImageDownloadStatus.Downloading,
-      'fa-check': comicImage.status === ComicImageDownloadStatus.Finish,
-      'fa-warning': comicImage.status === ComicImageDownloadStatus.Error,
-      'fa-copy': comicImage.status === ComicImageDownloadStatus.Exist
-    };
-
-  }
-
-  getDownloadStatusTextStyleCondition(comicImage: ComicImageInfo) {
-    return {
-      'text-success': comicImage.status === ComicImageDownloadStatus.Finish,
-      'text-info': comicImage.status === ComicImageDownloadStatus.Downloading,
-      'text-danger': comicImage.status === ComicImageDownloadStatus.Error || comicImage.status === ComicImageDownloadStatus.Exist,
-    };
+  toogleSkipIfExist() {
+    this.skipIfExist = !this.skipIfExist;
   }
 
   startDownload() {
-    this.service.startDownload().then(() => {
+    this.service.startDownload(this.skipIfExist).then(() => {
       alert('全部下載完成');
     });
   }
