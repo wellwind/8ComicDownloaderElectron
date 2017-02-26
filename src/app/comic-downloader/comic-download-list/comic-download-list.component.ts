@@ -26,8 +26,10 @@ export class ComicDownloadListComponent implements OnInit {
   }
 
   startDownload() {
-    this.service.startDownload(this.skipIfExist).then(() => {
-      alert('全部下載完成');
-    });
+    if (this.service.toDownloadComicImageList !== undefined && this.service.toDownloadComicImageList.length > 0) {
+      this.service.startDownload(this.skipIfExist).then(() => {
+        alert('全部下載完成');
+      });
+    }
   }
 }

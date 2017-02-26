@@ -104,11 +104,18 @@ describe('ComicDownloadListComponent', () => {
       expect(component.skipIfExist).toBeTruthy();
     });
   });
+
   describe('start download', () => {
     beforeEach(() => {
       spyOn(service, 'startDownload').and.returnValue(new Promise((resolve) => {
         resolve();
       }));
+
+      service.toDownloadComicImageList = [{
+        savedPath: `TestComic${path.sep}0004${path.sep}image03.jpg`,
+        imageUrl: 'http://comic/0004/image03.jpg',
+        status: ComicImageDownloadStatus.Exist
+      }];
 
       spyOn(window, 'alert');
     });
@@ -117,6 +124,13 @@ describe('ComicDownloadListComponent', () => {
       component.skipIfExist = false;
       component.startDownload();
       expect(service.startDownload).toHaveBeenCalledWith(component.skipIfExist);
+    });
+
+    it('should call service.startDownload() only if comic image list is not empty', () => {
+      service.toDownloadComicImageList = [];
+      component.startDownload();
+
+      expect(service.startDownload).toHaveBeenCalledTimes(0);
     });
 
     it('should alert after download complete', fakeAsync(() => {
