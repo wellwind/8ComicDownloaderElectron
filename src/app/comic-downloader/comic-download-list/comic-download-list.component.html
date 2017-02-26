@@ -2,25 +2,25 @@
   <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 下載清單</h3>
   <div class="col-xs-12">
     <div class="col-xs-12 col-md-offset-3 col-md-2">
-      <a href="javascript: void(0);" class="btn btn-success btn-block" id="oneKeyDownload" data-toggle="tooltip" data-placement="top"
-        title="一鍵下載會將[漫畫清單]中所有漫畫分析成下載清單並執行下載動作">
+      <button href="javascript: void(0);" class="btn btn-success btn-block" id="oneKeyDownload" data-toggle="tooltip" data-placement="top"
+        title="一鍵下載會將[漫畫清單]中所有漫畫分析成下載清單並執行下載動作" [disabled]="downloading">
         <i class="fa fa-fw fa-magic"></i> 一鍵下載
-        </a>
+        </button>
     </div>
     <div class="col-xs-12 col-md-2">
-      <a href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls">
+      <button href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls" [disabled]="downloading">
         <i class="fa fa-fw fa-remove"></i> 清除下載清單
-      </a>
+      </button>
     </div>
     <div class="col-xs-12 col-md-2">
-      <a href="javascript: void(0);" class="btn btn-success btn-block" id="startDownload" (click)="startDownload()">
+      <button href="javascript: void(0);" class="btn btn-success btn-block" id="startDownload" (click)="startDownload()" [disabled]="downloading">
         <i class="fa fa-fw fa-download"></i> 開始下載
-      </a>
+      </button>
     </div>
     <div class="col-xs-12 col-md-3">
       <div class="checkbox">
         <label>
-          <input type="checkbox" id="skipIfExist" [checked]="skipIfExist" (click)="toogleSkipIfExist()" />
+          <input type="checkbox" id="skipIfExist" [checked]="skipIfExist" (click)="toogleSkipIfExist()"  [disabled]="downloading"/>
           檔案已存在就不下載
         </label>
       </div>
