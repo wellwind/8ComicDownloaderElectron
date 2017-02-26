@@ -1,3 +1,6 @@
+主分支：[![Build Status](https://travis-ci.org/wellwind/8ComicDownloaderElectron.svg?branch=master)](https://travis-ci.org/wellwind/8ComicDownloaderElectron)
+開發分支：[![Build Status](https://travis-ci.org/wellwind/8ComicDownloaderElectron.svg?branch=develop)](https://travis-ci.org/wellwind/8ComicDownloaderElectron)
+
 8ComicDownloader (Electron Version) 1.5.1 Last Updated: 2017/01/18
 
 ![8Comicdownloader Electron Version](http://wellwind.github.io/8comicdownloader-electron/screenshots/app-screenshot.png)
