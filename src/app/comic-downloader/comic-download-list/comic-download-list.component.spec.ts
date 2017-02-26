@@ -135,10 +135,35 @@ describe('ComicDownloadListComponent', () => {
 
     it('should alert after download complete', fakeAsync(() => {
       component.startDownload();
+      expect(component.downloading).toBeTruthy();
+
       tick();
 
       expect(window.alert).toHaveBeenCalledWith('全部下載完成');
+      expect(component.downloading).toBeFalsy();
     }));
+
+    it('should disabled button when downloading', () => {
+      const oneKeyDownloadButton = fixture.debugElement.query(By.css('#oneKeyDownload')).nativeElement;
+      const clearPictureUrlsButton = fixture.debugElement.query(By.css('#clearPictureUrls')).nativeElement;
+      const startDownloadButton = fixture.debugElement.query(By.css('#startDownload')).nativeElement;
+      const skipIfExistCheckbox = fixture.debugElement.query(By.css('#skipIfExist')).nativeElement;
+
+
+      component.downloading = true;
+      fixture.detectChanges();
+      expect(oneKeyDownloadButton.disabled).toBeTruthy();
+      expect(clearPictureUrlsButton.disabled).toBeTruthy();
+      expect(startDownloadButton.disabled).toBeTruthy();
+      expect(skipIfExistCheckbox.disabled).toBeTruthy();
+
+      component.downloading = false;
+      fixture.detectChanges();
+      expect(oneKeyDownloadButton.disabled).toBeFalsy();
+      expect(clearPictureUrlsButton.disabled).toBeFalsy();
+      expect(startDownloadButton.disabled).toBeFalsy();
+      expect(skipIfExistCheckbox.disabled).toBeFalsy();
+    });
   });
 
 });

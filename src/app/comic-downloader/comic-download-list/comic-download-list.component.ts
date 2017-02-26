@@ -11,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class ComicDownloadListComponent implements OnInit {
   downloadStatusEnum = ComicImageDownloadStatus;
   skipIfExist = true;
+  downloading = false;
 
   constructor(private service: ComicDownloaderService) { }
 
@@ -27,8 +28,10 @@ export class ComicDownloadListComponent implements OnInit {
 
   startDownload() {
     if (this.service.toDownloadComicImageList !== undefined && this.service.toDownloadComicImageList.length > 0) {
+      this.downloading = true;
       this.service.startDownload(this.skipIfExist).then(() => {
         alert('全部下載完成');
+        this.downloading = false;
       });
     }
   }
