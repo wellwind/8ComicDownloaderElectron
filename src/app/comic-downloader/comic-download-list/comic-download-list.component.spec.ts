@@ -139,8 +139,15 @@ describe('ComicDownloadListComponent', () => {
         }]
       };
 
-      spyOn(service, 'getImageList').and.returnValue(new Promise((resolve) => { resolve(); }));
-      spyOn(component, 'startDownload');
+      const expectedOrder = [];
+      spyOn(service, 'getImageList').and.callFake((url, vols) => {
+        expectedOrder.push(url);
+        return new Promise((resolve) => { resolve(); });
+      });
+
+      spyOn(component, 'startDownload').and.callFake(() => {
+        expectedOrder.push('start');
+      });
 
       component.oneClickDownload();
       tick();
@@ -150,6 +157,7 @@ describe('ComicDownloadListComponent', () => {
       expect(service.getImageList).toHaveBeenCalledWith('http://comic/3', 5);
       expect(service.getImageList).toHaveBeenCalledTimes(3);
       expect(component.startDownload).toHaveBeenCalled();
+      expect(expectedOrder).toEqual(['http://comic/1', 'http://comic/2', 'http://comic/3', 'start']);
     }));
   });
 
