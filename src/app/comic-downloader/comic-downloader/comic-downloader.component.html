@@ -5,6 +5,6 @@
     </div>
   </div>
   <app-comic-folder [appSettings]="appSettings"></app-comic-folder>
-  <app-comic-list [appSettings]="appSettings"></app-comic-list>
-  <app-comic-download-list></app-comic-download-list>
+  <app-comic-list [appSettings]="appSettings" #comicList></app-comic-list>
+  <app-comic-download-list [getLastVols]="comicList.getLastVolumes"></app-comic-download-list>
 </section>
