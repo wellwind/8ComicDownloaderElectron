@@ -184,8 +184,8 @@ export class ComicDownloaderService {
     this.updateSettings();
   }
 
-  getImageList(comicUrl, lastVols = 0) {
-    this.getHtmlFromUrl(comicUrl).then((content: string) => {
+  getImageList(comicUrl, lastVols = 0): Promise<any> {
+    return this.getHtmlFromUrl(comicUrl).then((content: string) => {
       const comicName = this.parseComicName(content);
       const code = content.split('var cs=\'')[1].split('\'')[0];
       const itemId = content.split('var ti=')[1].split(';')[0];
@@ -220,6 +220,9 @@ export class ComicDownloaderService {
     return result;
   }
 
+  clearToDownloadImageList() {
+    this.toDownloadComicImageList = [];
+  }
 
   downloadImage(image: ComicImageInfo, skipIfExist: boolean) {
     return new Promise((resolve, reject) => {
@@ -232,7 +235,7 @@ export class ComicDownloaderService {
     });
   }
 
-  startDownload(skipIfExist) {
+  startDownload(skipIfExist): Promise<any> {
     // TODO: 加入更適合的測試案例
     this.queuedDownloadTaskCount = 0;
     let currentTaskMaxIndex = this.maxParallelDownloads;

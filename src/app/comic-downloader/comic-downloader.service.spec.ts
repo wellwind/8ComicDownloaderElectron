@@ -637,5 +637,19 @@ describe('ComicDownloaderService', () => {
         done();
       });
     });
+
+    describe('clearToDownloadImageList()', () => {
+      it('should clear the toDownloadImageList', () => {
+        service.toDownloadComicImageList = [{
+          savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0004/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        }];
+
+        service.clearToDownloadImageList();
+
+        expect(service.toDownloadComicImageList).toEqual([]);
+      });
+    })
   });
 });

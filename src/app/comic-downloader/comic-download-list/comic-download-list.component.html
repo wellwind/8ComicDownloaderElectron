@@ -2,13 +2,13 @@
   <h3 class="col-xs-12 text-info"><i class="fa fa-fw fa-list"></i> 下載清單</h3>
   <div class="col-xs-12">
     <div class="col-xs-12 col-md-offset-3 col-md-2">
-      <button href="javascript: void(0);" class="btn btn-success btn-block" id="oneKeyDownload" data-toggle="tooltip" data-placement="top"
+      <button href="javascript: void(0);" class="btn btn-success btn-block" id="oneKeyDownload" (click)="oneClickDownload()" data-toggle="tooltip" data-placement="top"
         title="一鍵下載會將[漫畫清單]中所有漫畫分析成下載清單並執行下載動作" [disabled]="downloading">
         <i class="fa fa-fw fa-magic"></i> 一鍵下載
         </button>
     </div>
     <div class="col-xs-12 col-md-2">
-      <button href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls" [disabled]="downloading">
+      <button href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls" (click)="clearToDownloadImageList()" [disabled]="downloading">
         <i class="fa fa-fw fa-remove"></i> 清除下載清單
       </button>
     </div>
