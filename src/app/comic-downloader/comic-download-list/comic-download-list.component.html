@@ -8,7 +8,7 @@
         </button>
     </div>
     <div class="col-xs-12 col-md-2">
-      <button href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls" [disabled]="downloading">
+      <button href="javascript: void(0);" class="btn btn-danger btn-block" id="clearPictureUrls" (click)="clearToDownloadImageList()" [disabled]="downloading">
         <i class="fa fa-fw fa-remove"></i> 清除下載清單
       </button>
     </div>

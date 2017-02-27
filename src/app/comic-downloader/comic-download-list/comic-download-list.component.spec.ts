@@ -105,6 +105,15 @@ describe('ComicDownloadListComponent', () => {
     });
   });
 
+  describe('clear download image list', () => {
+    it('should call service.toDownloadList', () => {
+      spyOn(service, 'clearToDownloadImageList');
+      fixture.debugElement.query(By.css('#clearPictureUrls')).triggerEventHandler('click', null);
+
+      expect(service.clearToDownloadImageList).toHaveBeenCalled();
+    });
+  });
+
   describe('start download', () => {
     beforeEach(() => {
       spyOn(service, 'startDownload').and.returnValue(new Promise((resolve) => {

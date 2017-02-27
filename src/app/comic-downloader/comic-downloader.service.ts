@@ -220,6 +220,9 @@ export class ComicDownloaderService {
     return result;
   }
 
+  clearToDownloadImageList() {
+    this.toDownloadComicImageList = [];
+  }
 
   downloadImage(image: ComicImageInfo, skipIfExist: boolean) {
     return new Promise((resolve, reject) => {
@@ -232,7 +235,7 @@ export class ComicDownloaderService {
     });
   }
 
-  startDownload(skipIfExist) {
+  startDownload(skipIfExist): Promise<any> {
     // TODO: 加入更適合的測試案例
     this.queuedDownloadTaskCount = 0;
     let currentTaskMaxIndex = this.maxParallelDownloads;

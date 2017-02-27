@@ -22,6 +22,10 @@ export class ComicDownloadListComponent implements OnInit {
     return this.service.toDownloadComicImageList;
   }
 
+  clearToDownloadImageList() {
+    this.service.clearToDownloadImageList();
+  }
+
   toogleSkipIfExist() {
     this.skipIfExist = !this.skipIfExist;
   }
