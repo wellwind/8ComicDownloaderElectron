@@ -114,6 +114,45 @@ describe('ComicDownloadListComponent', () => {
     });
   });
 
+  describe('one click download', () => {
+    it('should call component.oneClickDownload when press button', () => {
+      spyOn(component, 'oneClickDownload');
+
+      fixture.debugElement.query(By.css('#oneKeyDownload')).triggerEventHandler('click', null);
+
+      expect(component.oneClickDownload).toHaveBeenCalled();
+    });
+
+    it('should get all comic images then start download', fakeAsync(() => {
+      component.getLastVols = 5;
+
+      service.appSettings = {
+        comicList: [{
+          name: 'comic name1',
+          url: 'http://comic/1'
+        }, {
+          name: 'comic name2',
+          url: 'http://comic/2'
+        }, {
+          name: 'comic name3',
+          url: 'http://comic/3'
+        }]
+      };
+
+      spyOn(service, 'getImageList').and.returnValue(new Promise((resolve) => { resolve(); }));
+      spyOn(component, 'startDownload');
+
+      component.oneClickDownload();
+      tick();
+
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/1', 5);
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/2', 5);
+      expect(service.getImageList).toHaveBeenCalledWith('http://comic/3', 5);
+      expect(service.getImageList).toHaveBeenCalledTimes(3);
+      expect(component.startDownload).toHaveBeenCalled();
+    }));
+  });
+
   describe('start download', () => {
     beforeEach(() => {
       spyOn(service, 'startDownload').and.returnValue(new Promise((resolve) => {
@@ -157,7 +196,6 @@ describe('ComicDownloadListComponent', () => {
       const clearPictureUrlsButton = fixture.debugElement.query(By.css('#clearPictureUrls')).nativeElement;
       const startDownloadButton = fixture.debugElement.query(By.css('#startDownload')).nativeElement;
       const skipIfExistCheckbox = fixture.debugElement.query(By.css('#skipIfExist')).nativeElement;
-
 
       component.downloading = true;
       fixture.detectChanges();

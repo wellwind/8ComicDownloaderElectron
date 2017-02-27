@@ -1,7 +1,9 @@
+import { ComicListComponent } from './../comic-list/comic-list.component';
 import { ComicImageDownloadStatus } from '../../shared/enums/comic-image-download-status.enum';
 import { ComicImageInfo } from './../../shared/interfaces/comic-image-info';
 import { ComicDownloaderService } from './../comic-downloader.service';
-import { Component, OnInit } from '@angular/core';
+import { Input, Component, OnInit } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-comic-download-list',
@@ -9,6 +11,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comic-download-list.component.css']
 })
 export class ComicDownloadListComponent implements OnInit {
+  @Input() getLastVols: number;
+
   downloadStatusEnum = ComicImageDownloadStatus;
   skipIfExist = true;
   downloading = false;
@@ -24,6 +28,19 @@ export class ComicDownloadListComponent implements OnInit {
 
   clearToDownloadImageList() {
     this.service.clearToDownloadImageList();
+  }
+
+  oneClickDownload() {
+    let tasks: Promise<any>;
+    (this.service.appSettings.comicList as any[]).forEach(comic => {
+      if (tasks === undefined) {
+        tasks = this.service.getImageList(comic.url, this.getLastVols);
+      } else {
+        tasks = tasks.then(() => this.service.getImageList(comic.url, this.getLastVols));
+      }
+    });
+
+    tasks.then(() => this.startDownload());
   }
 
   toogleSkipIfExist() {
