@@ -1,8 +1,8 @@
+import * as _ from 'lodash';
 import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
 import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
 import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ElectronService } from './../shared/services/electron.service';
-import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 
 const os = window.require('os');
@@ -11,6 +11,7 @@ const path = window.require('path');
 const mkdirp = require('mkdirp');
 const request = require('request');
 const iconv = require('iconv-lite');
+const promiseLimit = require('promise-limit')
 
 @Injectable()
 export class ComicDownloaderService {
@@ -237,25 +238,31 @@ export class ComicDownloaderService {
 
   startDownload(skipIfExist): Promise<any> {
     // TODO: 加入更適合的測試案例
-    this.queuedDownloadTaskCount = 0;
-    let currentTaskMaxIndex = this.maxParallelDownloads;
+    // this.queuedDownloadTaskCount = 0;
+    // let currentTaskMaxIndex = this.maxParallelDownloads;
 
-    const downloadTask = this.toDownloadComicImageList.map((image, index) => {
-      return new Promise((resolve, reject) => {
-        const interval = setInterval(() => {
-          if (this.queuedDownloadTaskCount < this.maxParallelDownloads && index < currentTaskMaxIndex) {
-            ++this.queuedDownloadTaskCount;
-            this.downloadImage(image, skipIfExist).then(() => {
-              --this.queuedDownloadTaskCount;
-              ++currentTaskMaxIndex;
-              resolve();
-            });
-            clearInterval(interval);
-          }
-        }, 500);
-      });
-    });
+    // const downloadTask = this.toDownloadComicImageList.map((image, index) => {
+    //   return new Promise((resolve, reject) => {
+    //     const interval = setInterval(() => {
+    //       if (this.queuedDownloadTaskCount < this.maxParallelDownloads && index < currentTaskMaxIndex) {
+    //         ++this.queuedDownloadTaskCount;
+    //         this.downloadImage(image, skipIfExist).then(() => {
+    //           --this.queuedDownloadTaskCount;
+    //           ++currentTaskMaxIndex;
+    //           resolve();
+    //         });
+    //         clearInterval(interval);
+    //       }
+    //     }, 500);
+    //   });
+    // });
 
-    return Promise.all(downloadTask);
+    // return Promise.all(downloadTask);
+    const limit = promiseLimit(this.maxParallelDownloads);
+    return Promise.all(this.toDownloadComicImageList.map(image =>
+      limit(() =>
+        this.downloadImage(image, skipIfExist)
+      )
+    ));
   }
 }
