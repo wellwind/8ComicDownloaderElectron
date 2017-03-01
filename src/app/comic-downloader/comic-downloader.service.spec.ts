@@ -586,7 +586,7 @@ describe('ComicDownloaderService', () => {
         }
       ];
 
-       const expected: ComicImageInfo[] = [
+      const expected: ComicImageInfo[] = [
         {
           savedPath: `TestComic${path.sep}9999${path.sep}image01.jpg`,
           imageUrl: 'http://comic/9999/image01.jpg',
@@ -679,37 +679,39 @@ describe('ComicDownloaderService', () => {
       expect(service.toDownloadComicImageList[3]).toEqual(expected[3]);
     }));
 
-    it('should call downloadImage N times', (done) => {
-      service.toDownloadComicImageList = [
-        {
-          savedPath: `TestComic${path.sep}0003${path.sep}image01.jpg`,
-          imageUrl: 'http://comic/0003/image01.jpg',
-          status: ComicImageDownloadStatus.Ready
-        },
-        {
-          savedPath: `TestComic${path.sep}0003${path.sep}image02.jpg`,
-          imageUrl: 'http://comic/0003/image02.jpg',
-          status: ComicImageDownloadStatus.Ready
-        },
-        {
-          savedPath: `TestComic${path.sep}0004${path.sep}image01.jpg`,
-          imageUrl: 'http://comic/0004/image01.jpg',
-          status: ComicImageDownloadStatus.Ready
-        },
-        {
-          savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
-          imageUrl: 'http://comic/0004/image02.jpg',
-          status: ComicImageDownloadStatus.Ready
-        },
-      ];
+    describe('start download', () => {
+      it('should call downloadImage N times', (done) => {
+        service.toDownloadComicImageList = [
+          {
+            savedPath: `TestComic${path.sep}0003${path.sep}image01.jpg`,
+            imageUrl: 'http://comic/0003/image01.jpg',
+            status: ComicImageDownloadStatus.Ready
+          },
+          {
+            savedPath: `TestComic${path.sep}0003${path.sep}image02.jpg`,
+            imageUrl: 'http://comic/0003/image02.jpg',
+            status: ComicImageDownloadStatus.Ready
+          },
+          {
+            savedPath: `TestComic${path.sep}0004${path.sep}image01.jpg`,
+            imageUrl: 'http://comic/0004/image01.jpg',
+            status: ComicImageDownloadStatus.Ready
+          },
+          {
+            savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
+            imageUrl: 'http://comic/0004/image02.jpg',
+            status: ComicImageDownloadStatus.Ready
+          },
+        ];
 
-      spyOn(service, 'downloadImage').and.returnValue(new Promise((resolve, reject) => {
-        resolve();
-      }));
+        spyOn(service, 'downloadImage').and.returnValue(new Promise((resolve, reject) => {
+          resolve();
+        }));
 
-      service.startDownload().then(() => {
-        expect(service.downloadImage).toHaveBeenCalledTimes(4);
-        done();
+        service.startDownload().then(() => {
+          expect(service.downloadImage).toHaveBeenCalledTimes(4);
+          done();
+        });
       });
     });
 
