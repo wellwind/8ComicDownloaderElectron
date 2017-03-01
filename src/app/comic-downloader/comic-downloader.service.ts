@@ -27,7 +27,9 @@ export class ComicDownloaderService {
    */
   queuedDownloadTaskCount = 0;
 
-  constructor(private electronService: ElectronService) { }
+  constructor(private electronService: ElectronService) {
+    this.toDownloadComicImageList = [];
+  }
 
   getConfigFilePath() {
     return os.homedir() + '/8ComicDownloader/settings.conf';
@@ -195,11 +197,9 @@ export class ComicDownloaderService {
         imageInfo = _.takeRight(imageInfo, lastVols);
       }
 
-      this.toDownloadComicImageList = [];
-
       const result: ComicImageInfo[] = this.imageInfoListToDownloadList(imageInfo, comicName);
 
-      this.toDownloadComicImageList = [...result];
+      this.toDownloadComicImageList = [...this.toDownloadComicImageList, ...result];
     });
   }
 
