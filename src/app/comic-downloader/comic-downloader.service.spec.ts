@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
 import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
@@ -9,6 +8,7 @@ import { ElectronService } from './../shared/services/electron.service';
 
 const os = window.require('os');
 const fs = window.require('fs');
+const path = window.require('path');
 const mkdirp = require('mkdirp');
 const request = require('request');
 const iconv = require('iconv-lite');
@@ -521,9 +521,6 @@ describe('ComicDownloaderService', () => {
     }));
 
     it('should set toDownloadComicImageList correctly', fakeAsync(() => {
-      service.getImageList('http://comic/url');
-      tick();
-
       const expected: ComicImageInfo[] = [
         {
           savedPath: `TestComic${path.sep}0001${path.sep}image01.jpg`,
@@ -567,9 +564,87 @@ describe('ComicDownloaderService', () => {
         },
       ];
 
+      service.getImageList('http://comic/url');
+      tick();
+
       expect(service.toDownloadComicImageList.length).toEqual(expected.length);
       expect(service.toDownloadComicImageList[0]).toEqual(expected[0]);
       expect(service.toDownloadComicImageList[7]).toEqual(expected[7]);
+    }));
+
+    it('should append to current toDownloadComicImageList', fakeAsync(() => {
+      service.toDownloadComicImageList = [
+        {
+          savedPath: `TestComic${path.sep}9999${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/9999/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}9999${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/9999/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        }
+      ];
+
+       const expected: ComicImageInfo[] = [
+        {
+          savedPath: `TestComic${path.sep}9999${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/9999/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}9999${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/9999/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0001${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0001/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0001${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0001/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0002${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0002/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0002${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0002/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0003/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0003${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0003/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image01.jpg`,
+          imageUrl: 'http://comic/0004/image01.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+        {
+          savedPath: `TestComic${path.sep}0004${path.sep}image02.jpg`,
+          imageUrl: 'http://comic/0004/image02.jpg',
+          status: ComicImageDownloadStatus.Ready
+        },
+      ];
+
+      service.getImageList('http://comic/url');
+      tick();
+
+      expect(service.toDownloadComicImageList.length).toEqual(expected.length);
+      expect(service.toDownloadComicImageList[0]).toEqual(expected[0]);
+      expect(service.toDownloadComicImageList[9]).toEqual(expected[9]);
     }));
 
     it('should set toDownloadComicImageList correctly if want last N vols', fakeAsync(() => {
@@ -650,6 +725,6 @@ describe('ComicDownloaderService', () => {
 
         expect(service.toDownloadComicImageList).toEqual([]);
       });
-    })
+    });
   });
 });
