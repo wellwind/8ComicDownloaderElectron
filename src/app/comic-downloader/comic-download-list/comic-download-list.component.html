@@ -36,7 +36,7 @@
         </tr>
       </thead>
       <tbody id="comicUrlsList" style="height: 500px; overflow: auto">
-        <tr *ngFor="let comicImage of getToDownloadImageList()">
+        <tr *ngFor="let comicImage of getToDownloadImageList()" [appFocusMe]="comicImage.focusMe">
           <td width="15%" [ngClass]="{'text-success': comicImage.status === downloadStatusEnum.Finish, 'text-info': comicImage.status === downloadStatusEnum.Downloading, 'text-danger': comicImage.status === downloadStatusEnum.Error || comicImage.status === downloadStatusEnum.Exist}">
             <i class="fa fa-fw" [ngClass]="{'fa-spinner': comicImage.status === downloadStatusEnum.Downloading, 'fa-spin': comicImage.status === downloadStatusEnum.Downloading, 'fa-check': comicImage.status === downloadStatusEnum.Finish,'fa-warning': comicImage.status === downloadStatusEnum.Error,'fa-copy': comicImage.status === downloadStatusEnum.Exist}"></i>            {{ comicImage.status | downloadStatus }}
           </td>

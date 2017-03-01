@@ -8,6 +8,7 @@ import { ComicDownloaderComponent } from './comic-downloader/comic-downloader.co
 import { ComicFolderComponent } from './comic-folder/comic-folder.component';
 import { ComicListComponent } from './comic-list/comic-list.component';
 import { ComicDownloadListComponent } from './comic-download-list/comic-download-list.component';
+import { FocusMeDirective } from './directives/focus-me.directive';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { ComicDownloadListComponent } from './comic-download-list/comic-download
     ComicFolderComponent,
     ComicListComponent,
     ComicDownloadListComponent,
-    DownloadStatusPipe],
+    DownloadStatusPipe,
+    FocusMeDirective],
   exports: [
     ComicDownloaderComponent
   ]

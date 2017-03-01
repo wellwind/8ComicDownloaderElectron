@@ -4,4 +4,5 @@ export interface ComicImageInfo {
     savedPath: string;
     imageUrl: string;
     status: ComicImageDownloadStatus;
+    focusMe?: boolean;
 }
