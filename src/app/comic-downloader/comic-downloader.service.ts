@@ -228,6 +228,7 @@ export class ComicDownloaderService {
   downloadImage(image: ComicImageInfo, skipIfExist: boolean) {
     return new Promise((resolve, reject) => {
       image.status = ComicImageDownloadStatus.Downloading;
+      image.focusMe = true;
       // TODO: 加入真正的下載邏輯
       setTimeout(() => {
         image.status = ComicImageDownloadStatus.Finish;
