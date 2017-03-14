@@ -1,13 +1,13 @@
 import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
 import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
-/* tslint:disable:no-unused-variable */
 import { TestBed, async, fakeAsync, tick, inject } from '@angular/core/testing';
 import { ComicDownloaderService } from './comic-downloader.service';
 import { ElectronService } from './../shared/services/electron.service';
 
 const os = window.require('os');
 const fs = window.require('fs');
+const http = window.require('http');
 const path = window.require('path');
 const mkdirp = require('mkdirp');
 const request = require('request');
@@ -708,7 +708,7 @@ describe('ComicDownloaderService', () => {
           resolve();
         }));
 
-        service.startDownload().then(() => {
+        service.startDownload(true).then(() => {
           expect(service.downloadImage).toHaveBeenCalledTimes(4);
           done();
         });
@@ -727,6 +727,83 @@ describe('ComicDownloaderService', () => {
 
         expect(service.toDownloadComicImageList).toEqual([]);
       });
+    });
+
+    describe('downloadImage()', () => {
+      beforeEach(() => {
+        service.appSettings = {
+          comicFolder: '/home/'
+        };
+      });
+
+      it('should run download if file not exist', fakeAsync(() => {
+        const image: ComicImageInfo = {
+          imageUrl: 'http://foo/bar/comic.jpg',
+          savedPath: 'foo/bar/comic.jpg',
+          status: ComicImageDownloadStatus.Ready
+        };
+
+        spyOn(fs, 'existsSync').and.returnValue(false);
+        spyOn(http, 'get');
+
+        service.downloadImage(image, false);
+        tick();
+
+        expect(http.get).toHaveBeenCalled();
+      }));
+
+      it('should not run download if file exist and skipIfExist is true', fakeAsync(() => {
+        const image: ComicImageInfo = {
+          imageUrl: 'http://foo/bar/comic.jpg',
+          savedPath: '/home/foo/bar/comic.jpg',
+          status: ComicImageDownloadStatus.Ready
+        };
+
+        spyOn(fs, 'existsSync').and.returnValue(true);
+        spyOn(http, 'get');
+
+        service.downloadImage(image, true);
+        tick();
+
+        expect(http.get).not.toHaveBeenCalled();
+        expect(image.status).toBe(ComicImageDownloadStatus.Exist);
+      }));
+
+      it('should run download if file exist but skipIfExist is false', fakeAsync(() => {
+        const image: ComicImageInfo = {
+          imageUrl: 'http://foo/bar/comic.jpg',
+          savedPath: '/home/foo/bar/comic.jpg',
+          status: ComicImageDownloadStatus.Ready
+        };
+
+        spyOn(fs, 'existsSync').and.returnValue(true);
+        spyOn(http, 'get');
+
+        service.downloadImage(image, false);
+        tick();
+
+        expect(http.get).toHaveBeenCalled();
+      }));
+
+      it('should call service.startDownloadImage when download', fakeAsync(() => {
+        const image: ComicImageInfo = {
+          imageUrl: 'http://foo/bar/comic.jpg',
+          savedPath: '/home/foo/bar/comic.jpg',
+          status: ComicImageDownloadStatus.Ready
+        };
+
+        spyOn(fs, 'existsSync').and.returnValue(false);
+        spyOn(service, 'getDownloadTmpPath').and.returnValue('/tmp');
+        spyOn(service, 'startDownloadImage').and.returnValue(new Promise((resolve, reject) => {
+          resolve();
+        }));
+        const expectedSavedPath = service.appSettings.comicFolder + path.sep + image.savedPath;
+        service.downloadImage(image, false);
+        tick();
+
+        expect(service.startDownloadImage).toHaveBeenCalledWith(image.imageUrl, '/tmp', expectedSavedPath);
+        expect(image.status).toBe(ComicImageDownloadStatus.Finish);
+      }));
     });
   });
 });
