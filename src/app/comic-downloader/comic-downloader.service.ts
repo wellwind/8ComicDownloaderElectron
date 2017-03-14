@@ -8,13 +8,16 @@ import { Injectable } from '@angular/core';
 const os = window.require('os');
 const fs = window.require('fs');
 const path = window.require('path');
+const http = window.require('http');
 const mkdirp = require('mkdirp');
 const request = require('request');
 const iconv = require('iconv-lite');
-const promiseLimit = require('promise-limit')
+const promiseLimit = require('promise-limit');
 
 @Injectable()
 export class ComicDownloaderService {
+  electronApp: any;
+
   appSettings: any;
   toDownloadComicImageList: ComicImageInfo[];
 
@@ -229,11 +232,54 @@ export class ComicDownloaderService {
     return new Promise((resolve, reject) => {
       image.status = ComicImageDownloadStatus.Downloading;
       image.focusMe = true;
-      // TODO: 加入真正的下載邏輯
-      setTimeout(() => {
-        image.status = ComicImageDownloadStatus.Finish;
+
+      const localSavedPath = this.appSettings.comicFolder + path.sep + image.savedPath;
+      const exist = fs.existsSync(localSavedPath);
+      if (!exist || !skipIfExist) {
+        image.status = ComicImageDownloadStatus.Downloading;
+        const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
+        this.startDownloadImage(image.imageUrl, downloadTmpPath, localSavedPath).then(() => {
+          image.status = ComicImageDownloadStatus.Finish;
+          resolve();
+        });
+      } else {
+        image.status = ComicImageDownloadStatus.Exist;
         resolve();
-      }, Math.random() * 3000);
+      }
+    });
+  }
+
+  getDownloadTmpPath(savedPath) {
+    // TODO: 加入測試案例
+    return os.tmpdir() + path.sep + path.basename(savedPath);
+  }
+
+  startDownloadImage(url, tmpPath, finalPath) {
+    // TODO: 加入測試案例
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(tmpPath);
+      http.get(url, (response) => {
+        // TODO: 加入錯誤處理
+        response.pipe(file);
+        mkdirp.call(this, path.dirname(finalPath), { fs: fs });
+        file.on('finish', () => {
+          this.moveFile(tmpPath, finalPath, () => {
+            resolve();
+          });
+        });
+      });
+    });
+  }
+
+  moveFile(fromPath, toPath, callback) {
+    // TODO: 加入更適合的測試案例
+    const streamFrom = fs.createReadStream(fromPath);
+    const streamTo = fs.createWriteStream(toPath);
+
+    streamFrom.pipe(streamTo);
+    streamFrom.on('end', function () {
+      fs.unlinkSync(fromPath);
+      callback();
     });
   }
 
