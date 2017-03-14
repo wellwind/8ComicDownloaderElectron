@@ -734,6 +734,12 @@ describe('ComicDownloaderService', () => {
         service.appSettings = {
           comicFolder: '/home/'
         };
+
+        service._downloadProgress = {
+          next: () => {},
+          error: () => {},
+          complete: () => {}
+        };
       });
 
       it('should run download if file not exist', fakeAsync(() => {
@@ -805,5 +811,50 @@ describe('ComicDownloaderService', () => {
         expect(image.status).toBe(ComicImageDownloadStatus.Finish);
       }));
     });
+  });
+
+  it('should caculate downloading progress', () => {
+    service.toDownloadComicImageList = [];
+    expect(service.getDownloadProgress()).toBe(0);
+
+    service.toDownloadComicImageList = [{
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Ready
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Error
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Exist
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Downloading
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Finish
+    }];
+
+    expect(service.getDownloadProgress()).toBe(60);
+
+    service.toDownloadComicImageList = [{
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Error
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Exist
+    }, {
+      savedPath: '',
+      imageUrl: '',
+      status: ComicImageDownloadStatus.Finish
+    }];
+
+    expect(service.getDownloadProgress()).toBe(100);
   });
 });

@@ -4,6 +4,8 @@ import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download
 import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ElectronService } from './../shared/services/electron.service';
 import { Injectable } from '@angular/core';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 
 const os = window.require('os');
 const fs = window.require('fs');
@@ -21,6 +23,9 @@ export class ComicDownloaderService {
   appSettings: any;
   toDownloadComicImageList: ComicImageInfo[];
 
+  downloadProgress: Observable<number>;
+  _downloadProgress: Observer<number>;
+
   /**
    * 最大平行下載數
    */
@@ -33,6 +38,11 @@ export class ComicDownloaderService {
 
   constructor(private electronService: ElectronService) {
     this.toDownloadComicImageList = [];
+
+    // TODO: 加入測試案例
+    this.downloadProgress = Observable.create((observer: Observer<number>) => {
+      this._downloadProgress = observer;
+    });
   }
 
   getConfigFilePath() {
@@ -240,10 +250,14 @@ export class ComicDownloaderService {
         const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
         this.startDownloadImage(image.imageUrl, downloadTmpPath, localSavedPath).then(() => {
           image.status = ComicImageDownloadStatus.Finish;
+
+          this._downloadProgress.next(this.getDownloadProgress());
           resolve();
         });
       } else {
         image.status = ComicImageDownloadStatus.Exist;
+
+        this._downloadProgress.next(this.getDownloadProgress());
         resolve();
       }
     });
@@ -272,7 +286,7 @@ export class ComicDownloaderService {
   }
 
   moveFile(fromPath, toPath, callback) {
-    // TODO: 加入更適合的測試案例
+    // TODO: 加入測試案例
     const streamFrom = fs.createReadStream(fromPath);
     const streamTo = fs.createWriteStream(toPath);
 
@@ -291,5 +305,27 @@ export class ComicDownloaderService {
         this.downloadImage(image, skipIfExist)
       )
     ));
+  }
+
+  getDownloadProgress() {
+    if (!this.toDownloadComicImageList) {
+      return 0;
+    }
+
+    const totalRecordsCount = this.toDownloadComicImageList.length;
+
+    if (totalRecordsCount === 0) {
+      return 0;
+    }
+
+    const finishedRecordsCount =
+      this.toDownloadComicImageList
+        .filter(data =>
+          data.status === ComicImageDownloadStatus.Error
+          || data.status === ComicImageDownloadStatus.Finish
+          || data.status === ComicImageDownloadStatus.Exist)
+        .length;
+
+    return parseInt((finishedRecordsCount * 100 / totalRecordsCount).toString(), 0);
   }
 }
