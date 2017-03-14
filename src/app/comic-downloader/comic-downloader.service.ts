@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 const os = window.require('os');
 const fs = window.require('fs');
 const path = window.require('path');
+const http = window.require('http');
 const mkdirp = require('mkdirp');
 const request = require('request');
 const iconv = require('iconv-lite');
@@ -15,6 +16,8 @@ const promiseLimit = require('promise-limit')
 
 @Injectable()
 export class ComicDownloaderService {
+  electronApp: any;
+
   appSettings: any;
   toDownloadComicImageList: ComicImageInfo[];
 
@@ -230,11 +233,22 @@ export class ComicDownloaderService {
       image.status = ComicImageDownloadStatus.Downloading;
       image.focusMe = true;
       // TODO: 加入真正的下載邏輯
-      setTimeout(() => {
-        image.status = ComicImageDownloadStatus.Finish;
-        resolve();
-      }, Math.random() * 3000);
+      const exist = fs.existsSync(image.savedPath);
+      if (!exist || !skipIfExist) {
+        image.status = ComicImageDownloadStatus.Downloading;
+        http.get(image.imageUrl, (response) => {
+          this.handleDownloadImageHttpRequest(response, image);
+        });
+      }
+      // setTimeout(() => {
+      //   image.status = ComicImageDownloadStatus.Finish;
+      //   resolve();
+      // }, Math.random() * 3000);
     });
+  }
+
+  handleDownloadImageHttpRequest(response, image: ComicImageInfo) {
+
   }
 
   startDownload(skipIfExist): Promise<any> {
