@@ -10,7 +10,7 @@
       "assets": [
         "assets",
         "favicon.ico",
-        "electron-main.js",
+        { "glob": "electron-main.js", "input": "../", "output": "./" },
         { "glob": "package.json", "input": "../", "output": "./" },
         { "glob": "jquery.min.js", "input": "../node_modules/jquery/dist/", "output": "./assets" },
         { "glob": "bootstrap.min.js", "input": "../node_modules/bootstrap/dist/js/", "output": "./assets" }
