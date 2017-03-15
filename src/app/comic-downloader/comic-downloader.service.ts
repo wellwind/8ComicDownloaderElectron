@@ -244,7 +244,7 @@ export class ComicDownloaderService {
       image.focusMe = true;
 
       const localSavedPath = this.appSettings.comicFolder + path.sep + image.savedPath;
-      const exist = fs.existsSync(localSavedPath);
+      const exist = fs.accessSync(localSavedPath);
       if (!exist || !skipIfExist) {
         image.status = ComicImageDownloadStatus.Downloading;
         const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
