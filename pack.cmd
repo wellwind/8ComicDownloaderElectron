@@ -1,1 +1,0 @@
-asar pack . app.asar --unpack-dir ".git"
