@@ -1,6 +1,6 @@
 import { ComicDownloaderElectronPage } from './app.po';
 
-describe('comic-downloader-electron App', function() {
+describe('comic-downloader-electron App', () => {
   let page: ComicDownloaderElectronPage;
 
   beforeEach(() => {

@@ -749,7 +749,7 @@ describe('ComicDownloaderService', () => {
           status: ComicImageDownloadStatus.Ready
         };
 
-        spyOn(fs, 'existsSync').and.returnValue(false);
+        spyOn(service, 'checkFileExist').and.returnValue(false);
         spyOn(http, 'get');
 
         service.downloadImage(image, false);
@@ -765,7 +765,7 @@ describe('ComicDownloaderService', () => {
           status: ComicImageDownloadStatus.Ready
         };
 
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        spyOn(service, 'checkFileExist').and.returnValue(true);
         spyOn(http, 'get');
 
         service.downloadImage(image, true);
@@ -782,7 +782,7 @@ describe('ComicDownloaderService', () => {
           status: ComicImageDownloadStatus.Ready
         };
 
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        spyOn(service, 'checkFileExist').and.returnValue(true);
         spyOn(http, 'get');
 
         service.downloadImage(image, false);
@@ -798,7 +798,7 @@ describe('ComicDownloaderService', () => {
           status: ComicImageDownloadStatus.Ready
         };
 
-        spyOn(fs, 'existsSync').and.returnValue(false);
+        spyOn(service, 'checkFileExist').and.returnValue(false);
         spyOn(service, 'getDownloadTmpPath').and.returnValue('/tmp');
         spyOn(service, 'startDownloadImage').and.returnValue(new Promise((resolve, reject) => {
           resolve();

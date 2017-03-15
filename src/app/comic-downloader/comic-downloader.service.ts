@@ -244,7 +244,8 @@ export class ComicDownloaderService {
       image.focusMe = true;
 
       const localSavedPath = this.appSettings.comicFolder + path.sep + image.savedPath;
-      const exist = fs.existsSync(localSavedPath);
+      // const exist = fs.accessSync(localSavedPath);
+      const exist = this.checkFileExist(localSavedPath);
       if (!exist || !skipIfExist) {
         image.status = ComicImageDownloadStatus.Downloading;
         const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
@@ -261,6 +262,16 @@ export class ComicDownloaderService {
         resolve();
       }
     });
+  }
+
+  checkFileExist(filePath) {
+    // TODO: 加入測試案例
+    try {
+      fs.accessSync(filePath);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   getDownloadTmpPath(savedPath) {
