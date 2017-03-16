@@ -3,7 +3,7 @@ import { ComicImageInfo } from './../shared/interfaces/comic-image-info';
 import { ComicImageDownloadStatus } from './../shared/enums/comic-image-download-status.enum';
 import { Comic8Parser } from './../shared/parsers/8comic-parser';
 import { ElectronService } from './../shared/services/electron.service';
-import { Injectable } from '@angular/core';
+import { NgZone, Injectable } from '@angular/core';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 
@@ -36,13 +36,33 @@ export class ComicDownloaderService {
    */
   queuedDownloadTaskCount = 0;
 
-  constructor(private electronService: ElectronService) {
+  /**
+   * 已下載數量
+   */
+  downloadCount = 0;
+
+  /**
+   * 需下載總數
+   */
+  totalCount = 0;
+
+  constructor(private zone: NgZone, private electronService: ElectronService) {
     this.toDownloadComicImageList = [];
 
     // TODO: 加入測試案例
     this.downloadProgress = Observable.create((observer: Observer<number>) => {
       this._downloadProgress = observer;
     });
+  }
+
+  mkdirp(dirPath) {
+    const basePath = path.dirname(dirPath);
+    if (os.platform() === 'win32') {
+      const spawnSync = window.require('child_process').spawnSync;
+      spawnSync('mkdir', [basePath]);
+    } else {
+      mkdirp.call(this, basePath, { fs: fs });
+    }
   }
 
   getConfigFilePath() {
@@ -84,7 +104,7 @@ export class ComicDownloaderService {
 
   handleReadSettingError(err) {
     if (err.toString().indexOf('no such file or directory') >= 0) {
-      mkdirp.call(this, path.dirname(this.getConfigFilePath()), { fs: fs });
+      this.mkdirp(path.dirname(this.getConfigFilePath()));
 
       const settings = {
         'comicFolder': path.dirname(this.getConfigFilePath()),
@@ -249,19 +269,29 @@ export class ComicDownloaderService {
       if (!exist || !skipIfExist) {
         image.status = ComicImageDownloadStatus.Downloading;
         const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
+        this.mkdirp(localSavedPath);
+
         this.startDownloadImage(image.imageUrl, downloadTmpPath, localSavedPath).then(() => {
           image.status = ComicImageDownloadStatus.Finish;
 
-          this._downloadProgress.next(this.getDownloadProgress());
+          this.reportProgress();
           resolve();
         });
       } else {
         image.status = ComicImageDownloadStatus.Exist;
-
-        this._downloadProgress.next(this.getDownloadProgress());
-        resolve();
+        // UX: 避免太多檔案已存在時會卡住
+        setTimeout(() => {
+          this.reportProgress();
+          resolve();
+        }, 10);
       }
     });
+  }
+
+  reportProgress() {
+    ++this.downloadCount;
+    const progress = parseInt((this.downloadCount * 100 / this.totalCount).toString(), 0);
+    this._downloadProgress.next(progress);
   }
 
   checkFileExist(filePath) {
@@ -286,7 +316,7 @@ export class ComicDownloaderService {
       http.get(url, (response) => {
         // TODO: 加入錯誤處理
         response.pipe(file);
-        mkdirp.call(this, path.dirname(finalPath), { fs: fs });
+
         file.on('finish', () => {
           this.moveFile(tmpPath, finalPath, () => {
             resolve();
@@ -310,33 +340,13 @@ export class ComicDownloaderService {
 
   startDownload(skipIfExist): Promise<any> {
     // TODO: 加入更適合的測試案例
+    this.totalCount = this.toDownloadComicImageList.length;
+    this.downloadCount = 0;
+    this._downloadProgress.next(0);
+
     const limit = promiseLimit(this.maxParallelDownloads);
     return Promise.all(this.toDownloadComicImageList.map(image =>
-      limit(() =>
-        this.downloadImage(image, skipIfExist)
-      )
+      limit(() => this.downloadImage(image, skipIfExist))
     ));
-  }
-
-  getDownloadProgress() {
-    if (!this.toDownloadComicImageList) {
-      return 0;
-    }
-
-    const totalRecordsCount = this.toDownloadComicImageList.length;
-
-    if (totalRecordsCount === 0) {
-      return 0;
-    }
-
-    const finishedRecordsCount =
-      this.toDownloadComicImageList
-        .filter(data =>
-          data.status === ComicImageDownloadStatus.Error
-          || data.status === ComicImageDownloadStatus.Finish
-          || data.status === ComicImageDownloadStatus.Exist)
-        .length;
-
-    return parseInt((finishedRecordsCount * 100 / totalRecordsCount).toString(), 0);
   }
 }
