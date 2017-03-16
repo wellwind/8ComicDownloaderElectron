@@ -56,12 +56,24 @@ export class ComicDownloaderService {
   }
 
   mkdirp(dirPath) {
-    if (os.platform() === 'win32') {
-      const spawnSync = window.require('child_process').spawnSync;
-      spawnSync('mkdir', [dirPath]);
-    } else {
-      mkdirp.call(this, dirPath, { fs: fs });
-    }
+    const makePath = os.platform() === 'win32' ? dirPath.split(path.sep).join('/') : dirPath;
+    mkdirp.sync(makePath, { fs: fs });
+    // if (os.platform() === 'win32') {
+    //   const spawnSync = window.require('child_process').spawnSync;
+    //   spawnSync('mkdir', [dirPath]);
+    // } else {
+    //   mkdirp.call(this, dirPath, { fs: fs });
+    // }
+    // const targetDir = 'path/to/dir';
+    // targetDir.split(path.sep).forEach((dir, index, splits) => {
+    //   const parent = splits.slice(0, index).join('/');
+    //   const dirPath = path.resolve(parent, dir);
+    //   if (!fs.existsSync(dirPath)) {
+    //     fs.mkdirSync(dirPath);
+    //   }
+    // });
+    // const makePath = os.platform() === 'win32' ? dirPath.split(path.sep).join('/') : dirPath;
+    // mkdirp(makePath, { fs: fs });
   }
 
   getConfigFilePath() {
