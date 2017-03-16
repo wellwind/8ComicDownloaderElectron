@@ -56,12 +56,11 @@ export class ComicDownloaderService {
   }
 
   mkdirp(dirPath) {
-    const basePath = path.dirname(dirPath);
     if (os.platform() === 'win32') {
       const spawnSync = window.require('child_process').spawnSync;
-      spawnSync('mkdir', [basePath]);
+      spawnSync('mkdir', [dirPath]);
     } else {
-      mkdirp.call(this, basePath, { fs: fs });
+      mkdirp.call(this, dirPath, { fs: fs });
     }
   }
 
@@ -269,7 +268,8 @@ export class ComicDownloaderService {
       if (!exist || !skipIfExist) {
         image.status = ComicImageDownloadStatus.Downloading;
         const downloadTmpPath = this.getDownloadTmpPath(localSavedPath);
-        this.mkdirp(localSavedPath);
+        console.log(localSavedPath);
+        this.mkdirp(path.dirname(localSavedPath));
 
         this.startDownloadImage(image.imageUrl, downloadTmpPath, localSavedPath).then(() => {
           image.status = ComicImageDownloadStatus.Finish;
